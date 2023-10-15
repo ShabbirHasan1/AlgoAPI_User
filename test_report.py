@@ -1,5 +1,4 @@
 from commons_kafka import *
-from tradesignals import *
 from services import *
 import aiohttp
 
@@ -12,8 +11,10 @@ async def main():
 
     try:
 
-        screenerList = await get_screener_stocks_chartink('kgl-mtf-up-v1')
-        print(screenerList)
+        pass
+
+        # screenerList = await get_screener_stocks_chartink('kgl-mtf-up-v1')
+        # print(screenerList)
 
         # await initialize_kafka()
         # ats = AlgoTradeSignal()

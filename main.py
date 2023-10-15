@@ -12,6 +12,7 @@ from spreads import *
 from hedges import *
 from plfundsrisks import *
 from pldatesummarys import *
+from webhooks import *
 from user_account import *
 
 app = FastAPI(title="AlgoAPI_User", version="1.0")
@@ -20,6 +21,7 @@ router.include_router(spreadsrouter, prefix="/spreads", tags=["Spreads"])
 router.include_router(hedgessrouter, prefix="/hedges", tags=["Hedges"])
 router.include_router(plfundsrisksrouter, prefix="/plfundsrisks", tags=["PLFundsRisks"])
 router.include_router(pldatesummarysrouter, prefix="/pldatesummarys", tags=["PLDateSummarys"])
+router.include_router(webhooksrouter, prefix="/webhooks", tags=["WebHooks"])
 router.include_router(useraccountrouter, prefix="/user_account", tags=["UserAccount"])
 router.include_router(eventsrouter, prefix="/events", tags=["Events"])
 
@@ -77,6 +79,7 @@ async def shutdown_event():
 @app.get("/")
 async def root(username: str = Depends(validate_credentials)):
     return {"AlgoAPI_User is Alive : " + str(username)}
+
 
 
 async def trigger_task_scheduler():
