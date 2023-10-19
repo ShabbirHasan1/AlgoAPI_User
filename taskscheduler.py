@@ -1,26 +1,24 @@
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from datetime import datetime, timedelta, date
-
+from commons_telegram import *
 TaskScheduler = AsyncIOScheduler()
 
 
-# # Schedule the task to run every 60 seconds
-# TaskScheduler.add_job(print_hello,args=[1], trigger="interval", seconds=5)
-
-# @TaskScheduler.scheduled_job('interval', seconds=5)
-# async def interval_task():
-#     print(f'interval task is run... {datetime.datetime.now()}')
-
-
-# @TaskScheduler.scheduled_job('interval', seconds=60, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
-# async def interval_task():
-#     try:
-#         # Key = 'TriggerTime'
-#         # Value = str(datetime.datetime.now())
-#         # await settings.kafka_producer.send('TradeSignals', key=Key, value=Value)
-#     except Exception as e:
-#         await  log_with_bot('e', e)
-
+# @TaskScheduler.scheduled_job('interval', seconds=180, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
+# async def interval_task_3mins():
+#     await log_with_bot('i',f"Task-3Mins : {datetime.datetime.now()}")
+#
+# @TaskScheduler.scheduled_job('interval', seconds=300, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
+# async def interval_task_5mins():
+#     await log_with_bot('i',f"Task-5Mins : {datetime.datetime.now()}")
+#
+# @TaskScheduler.scheduled_job('interval', seconds=900, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
+# async def interval_task_15mins():
+#     await log_with_bot('i',f"Task-15Mins : {datetime.datetime.now()}")
+#
+# @TaskScheduler.scheduled_job('interval', seconds=3600, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
+# async def interval_task_60mins():
+#     await log_with_bot('i',f"Task-60Mins : {datetime.datetime.now()}")
 
 
 # @TaskScheduler.scheduled_job('cron', hour=15, minute=25)

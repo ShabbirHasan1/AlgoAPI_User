@@ -4,6 +4,34 @@ import pandas as pd
 import asyncio
 
 
+class AlgoUser:
+    def __init__(self,broker,userid):
+        self.broker = broker
+        self.userid = userid
+
+    async def login(self):
+        try:
+            pass
+        except Exception as e:
+            await log_with_bot('e', e)
+
+    async def get_positionBook(self):
+        try:
+            pass
+        except Exception as e:
+            await log_with_bot('e', e)
+
+    async def get_orderBook(self):
+        try:
+            pass
+        except Exception as e:
+            await log_with_bot('e', e)
+
+    async def get_tradeBook(self):
+        try:
+            pass
+        except Exception as e:
+            await log_with_bot('e', e)
 class AlgoMaster:
     def __init__(self):
         pass
