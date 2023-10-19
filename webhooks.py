@@ -21,13 +21,13 @@ async def webhook_tradesignal(request: Request, background_tasks: BackgroundTask
 
 async def process_event(event: dict):
     try:
-        print(f"Event {event} processed.")
+        await log_with_bot('i',f"Event {event} processed - {datetime.datetime.now()}")
     except Exception as e:
         await log_with_bot('e',e)
 
 
 async def process_trade_signal(tradesignal: dict):
     try:
-        print(f"Trade signal {tradesignal} processed.")
+        await log_with_bot('i',f"TradeSignal {tradesignal} processed - {datetime.datetime.now()}")
     except Exception as e:
         await log_with_bot('e', e)
