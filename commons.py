@@ -1,6 +1,7 @@
 import secrets
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi import Depends, HTTPException, status
+from fastapi.responses import JSONResponse
 import logging
 import logging.config
 import inspect
@@ -11,8 +12,29 @@ from config import *
 # Add a basic HTTP authentication
 security = HTTPBasic()
 
+
+class DataNotFoundException(Exception):
+    pass
+
+
+# Custom exception handler
+def exception_handler(e):
+    if isinstance(e, DataNotFoundException):
+        status_code = 404
+        code = 'data-not-found'
+    else:
+        status_code = 500
+        code = 'internal-server-error'
+
+    return JSONResponse(
+        status_code=status_code,
+        content={"status": 'error', "code": code, "description": str(e), "data": []}
+    )
+
+
 def SystemDateTime():
     return datetime.datetime.now()
+
 
 def symbol_price_round(n):
     # Smaller multiple
@@ -21,6 +43,7 @@ def symbol_price_round(n):
     b = a + 0.05
     # Return of closest of two
     return round((b if n - a > b - n else a), 2)
+
 
 def get_calling_function_name():
     frame = inspect.currentframe().f_back
@@ -87,10 +110,8 @@ def validate_credentials(credentials: HTTPBasicCredentials = Depends(security)):
     return credentials.username
 
 
-
 class ApiMasterProxy:
     def __init__(self):
-
         self.base_url = 'http://' + settings.API_MASTER_URL
         self.users_url = '/users'
 
@@ -101,21 +122,8 @@ class ApiMasterProxy:
                 return await response.json()
 
 
-class ApiStrategyProxy:
-    def __init__(self):
-
-        self.base_url = 'http://' + settings.API_STRATEGY_URL
-        self.strategies_url = '/strategies'
-
-    async def get(self, path, params=None):
-        async with aiohttp.ClientSession() as session:
-            url = f"{self.base_url}{path}"
-            async with session.get(url, params=params) as response:
-                return await response.json()
-
 class ApiDataProxy:
     def __init__(self):
-
         self.base_url = 'http://' + settings.API_DATA_URL
         self.quotes_url = '/quotes'
 
@@ -124,8 +132,6 @@ class ApiDataProxy:
             url = f"{self.base_url}{path}"
             async with session.get(url, params=params) as response:
                 return await response.json()
-
-
 
 
 class ApiBrokerProxy:
@@ -167,3 +173,185 @@ class ApiBrokerProxy:
             url = f"{self.base_url}{path}"
             async with session.delete(url, params=params) as response:
                 return await response.json()
+
+
+class ApiStrategyProxy:
+    def __init__(self):
+        self.base_url = 'http://' + settings.API_STRATEGY_URL
+
+    async def get(self, path, params=None):
+        async with aiohttp.ClientSession() as session:
+            url = f"{self.base_url}{path}"
+            async with session.get(url, params=params) as response:
+                return await response.json()
+
+    async def post(self, path, data=None, json=None):
+        async with aiohttp.ClientSession() as session:
+            url = f"{self.base_url}{path}"
+            async with session.post(url, data=data, json=json) as response:
+                return await response.json()
+
+    async def put(self, path, data=None, json=None):
+        async with aiohttp.ClientSession() as session:
+            url = f"{self.base_url}{path}"
+            async with session.put(url, data=data, json=json) as response:
+                return await response.json()
+
+    async def delete(self, path, params=None):
+        async with aiohttp.ClientSession() as session:
+            url = f"{self.base_url}{path}"
+            async with session.delete(url, params=params) as response:
+                return await response.json()
+
+
+class ApiUserProxy:
+    def __init__(self):
+        self.base_url = 'http://' + settings.API_USER_URL
+
+    async def post(self, path, data=None, json=None):
+        async with aiohttp.ClientSession() as session:
+            url = f"{self.base_url}{path}"
+            async with session.post(url, data=data, json=json) as response:
+                return await response.json()
+
+
+class AlgoUser():
+    def __init__(self, broker, userid):
+        self.broker = broker
+        self.userid = userid
+
+    async def notify_event(self, data):
+        userProxy = ApiUserProxy()
+        path = '/webhooks/event'
+        response = await userProxy.post(path, json=data)
+        return response
+
+    async def notify_tradesignal(self, data):
+        userProxy = ApiUserProxy()
+        path = '/webhooks/tradesignal'
+        response = await userProxy.post(path, json=data)
+        return response
+
+
+class AlgoData:
+    def __init__(self):
+        pass
+
+    async def get_quote_live(self, symbol):
+        dataProxy = ApiDataProxy()
+        path = '/quotes/live'
+        path = path + '/' + symbol.upper()
+        response = await dataProxy.get(path)
+        return response
+
+    async def get_quote_list(self, symbols):
+        dataProxy = ApiDataProxy()
+        path = '/quotes/list'
+        path = path + '/' + symbols.upper()
+        response = await dataProxy.get(path)
+        return response
+
+    async def get_quote_ohlc(self, timeframe, symbol):
+        dataProxy = ApiDataProxy()
+        path = '/quotes/ohlc'
+        path = path + '/' + timeframe + '/' + symbol.upper()
+        response = await dataProxy.get(path)
+        return response
+
+
+class AlgoBroker:
+    def __init__(self, broker):
+        self.broker = broker
+
+    async def get_quote_live(self, symbol):
+        brokerProxy = ApiDataProxy()
+        path = '/quotes/live'
+        path = path + '/' + symbol.upper()
+        response = await brokerProxy.get(path)
+        return response
+
+    async def get_quote_list(self, symbols):
+        brokerProxy = ApiDataProxy()
+        path = '/quotes/list'
+        path = path + '/' + symbols.upper()
+        response = await brokerProxy.get(path)
+        return response
+
+    async def get_quote_ohlc(self, timeframe, symbol):
+        brokerProxy = ApiDataProxy()
+        path = '/quotes/ohlc'
+        path = path + '/' + timeframe + '/' + symbol.upper()
+        response = await brokerProxy.get(path)
+        return response
+
+
+class AlgoStrategy:
+    def __init__(self):
+        pass
+
+    async def get_strategies(self):
+        dataProxy = ApiStrategyProxy()
+        path = '/strategies'
+        response = await dataProxy.get(path)
+        return response
+
+    async def get_strategy_data(self, strategy):
+        dataProxy = ApiStrategyProxy()
+        path = '/strategies'
+        path = path + '/' + strategy.upper()
+        response = await dataProxy.get(path)
+        return response
+
+    async def get_strategy_users(self, strategy):
+        dataProxy = ApiStrategyProxy()
+        path = '/strategies/users'
+        path = path + '/' + strategy.upper()
+        response = await dataProxy.get(path)
+        return response
+
+
+class AlgoMaster:
+    def __init__(self):
+        pass
+
+    async def get_user_data(self, broker, userid):
+        masterProxy = ApiMasterProxy()
+        path = '/users'
+        path = path + '/' + broker + '/' + userid.upper()
+        response = await masterProxy.get(path)
+        return response
+
+    async def get_user_data_usertype(self, broker, userid, usertype):
+        masterProxy = ApiMasterProxy()
+        path = '/users/usertype'
+        path = path + '/' + broker + '/' + userid.upper() + '/' + usertype
+        response = await masterProxy.get(path)
+        return response
+
+    async def get_access_token_data(self, broker, userid):
+        masterProxy = ApiMasterProxy()
+        path = '/users/accesstokendata'
+        path = path + '/' + broker + '/' + userid.upper()
+        response = await masterProxy.get(path)
+        return response
+
+    async def get_data_token_data(self, broker, userid):
+        masterProxy = ApiMasterProxy()
+        path = '/users/datatokendata'
+        path = path + '/' + broker + '/' + userid.upper()
+        response = await masterProxy.get(path)
+        return response
+
+    async def get_access_token(self, broker, userid):
+        masterProxy = ApiMasterProxy()
+        path = '/users/accesstoken'
+        path = path + '/' + broker + '/' + userid.upper()
+        response = await masterProxy.get(path)
+        return response
+
+    async def get_data_token(self, broker, userid):
+        masterProxy = ApiMasterProxy()
+        path = '/users/datatoken'
+        path = path + '/' + broker + '/' + userid.upper()
+        response = await masterProxy.get(path)
+        return response

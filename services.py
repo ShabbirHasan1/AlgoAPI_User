@@ -4,47 +4,6 @@ import pandas as pd
 import asyncio
 
 
-class AlgoUser:
-    def __init__(self,broker,userid):
-        self.broker = broker
-        self.userid = userid
-
-    async def login(self):
-        try:
-            pass
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_positionBook(self):
-        try:
-            pass
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_orderBook(self):
-        try:
-            pass
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_tradeBook(self):
-        try:
-            pass
-        except Exception as e:
-            await log_with_bot('e', e)
-class AlgoMaster:
-    def __init__(self):
-        pass
-
-    async def get_user_data(self, broker, userid):
-        try:
-            masterProxy = ApiMasterProxy()
-            path = '/users'
-            path = path + '/' + broker + '/' + userid.upper()
-            response = await masterProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
 
 
 class AlgoSpreads:
@@ -62,16 +21,22 @@ class AlgoSpreads:
     async def get_spreads_data(self, strategy):
         try:
             spread_data = await self.SpreadsRepository.fetch_by_strategy(strategy)
-            return spread_data
+            if spread_data is None:
+                raise DataNotFoundException(f"Spread data not found : {strategy}")
+            return SpreadsSchema(**spread_data.__dict__)
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
 
     async def get_spreads_all(self):
         try:
-            spread_data = await self.SpreadsRepository.fetch_all()
-            return spread_data
+            spreads = await self.SpreadsRepository.fetch_all()
+            if len(spreads) == 0:
+                raise DataNotFoundException(f"Spread data not found")
+            return [SpreadsSchema(**record.__dict__) for record in spreads]
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
 
 
 class AlgoHedges:
@@ -89,16 +54,22 @@ class AlgoHedges:
     async def get_hedges_data(self, strategy):
         try:
             hedge_data = await self.HedgesRepository.fetch_by_strategy(strategy)
-            return hedge_data
+            if hedge_data is None:
+                raise DataNotFoundException(f"Hedge data not found : {strategy}")
+            return HedgesSchema(**hedge_data.__dict__)
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
 
     async def get_hedges_all(self):
         try:
-            hedge_data = await self.HedgesRepository.fetch_all()
-            return hedge_data
+            hedges = await self.HedgesRepository.fetch_all()
+            if len(hedges) == 0:
+                raise DataNotFoundException(f"Hedge data not found")
+            return [HedgesSchema(**record.__dict__) for record in hedges]
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
 
 
 class AlgoPLFundsRisk:
@@ -115,17 +86,24 @@ class AlgoPLFundsRisk:
 
     async def get_plfundsrisks_data(self, date):
         try:
-            plfundsrisk_data = await self.PLFundsRiskRepository.fetch_by_date(date)
-            return plfundsrisk_data
+            plfundsrisks = await self.PLFundsRiskRepository.fetch_by_date(date)
+            if len(plfundsrisks) == 0:
+                raise DataNotFoundException(f"PLFundsRisk data not found : {date}")
+            return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
+
 
     async def get_plfundsrisks_all(self):
         try:
-            plfundsrisk_data = await self.PLFundsRiskRepository.fetch_all()
-            return plfundsrisk_data
+            plfundsrisks = await self.PLFundsRiskRepository.fetch_all()
+            if len(plfundsrisks) == 0:
+                raise DataNotFoundException(f"PLFundsRisk data not found")
+            return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
 
 
 class AlgoPLDateSummary:
@@ -142,96 +120,29 @@ class AlgoPLDateSummary:
 
     async def get_pldatesummarys_data(self, date):
         try:
-            pldatesummary_data = await self.PLDateSummaryRepository.fetch_by_date(date)
-            return pldatesummary_data
+            pldatesummarys = await self.PLDateSummaryRepository.fetch_by_date(date)
+            if len(pldatesummarys) == 0:
+                raise DataNotFoundException(f"PLDateSummary data not found : {date}")
+            return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
         except Exception as e:
             await log_with_bot('e', e)
+            raise e
+
 
     async def get_pldatesummarys_all(self):
-        try:
-            pldatesummary_data = await self.PLDateSummaryRepository.fetch_all()
-            return pldatesummary_data
-        except Exception as e:
-            await log_with_bot('e', e)
+            try:
+                pldatesummarys= await self.PLDateSummaryRepository.fetch_all()
+                if len(pldatesummarys) == 0:
+                    raise DataNotFoundException(f"PLDateSummary data not found")
+                return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
+            except Exception as e:
+                await log_with_bot('e', e)
+                raise e
 
 
-class AlgoStrategy:
-    async def get_strategy_data(self, strategy):
-        try:
-            strategyProxy = ApiStrategyProxy()
-            path = '/strategies'
-            path = path + '/' + strategy.upper()
-            response = await strategyProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
 
 
-class AlgoData:
-    def __init__(self):
-        pass
-
-    async def get_quote_live(self, symbol):
-        try:
-            dataProxy = ApiDataProxy()
-            path = '/quotes/live'
-            path = path + '/' + symbol.upper()
-            response = await dataProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_quote_list(self, symbols):
-        try:
-            dataProxy = ApiDataProxy()
-            path = '/quotes/list'
-            path = path + '/' + symbols.upper()
-            response = await dataProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_quote_ohlc(self, timeframe, symbol):
-        try:
-            dataProxy = ApiDataProxy()
-            path = '/quotes/ohlc'
-            path = path + '/' + timeframe + '/' + symbol.upper()
-            response = await dataProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
 
 
-class AlgoBroker:
-    def __init__(self, broker):
-        self.broker = broker
 
-    async def get_quote_live(self, symbol):
-        try:
-            brokerProxy = ApiBrokerProxy(self.broker)
-            path = '/quotes/live'
-            path = path + '/' + symbol.upper()
-            response = await brokerProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
 
-    async def get_quote_list(self, symbols):
-        try:
-            brokerProxy = ApiBrokerProxy(self.broker)
-            path = '/quotes/list'
-            path = path + '/' + symbols.upper()
-            response = await brokerProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)
-
-    async def get_quote_ohlc(self, timeframe, symbol):
-        try:
-            brokerProxy = ApiBrokerProxy(self.broker)
-            path = '/quotes/ohlc'
-            path = path + '/' + timeframe + '/' + symbol.upper()
-            response = await brokerProxy.get(path)
-            return response
-        except Exception as e:
-            await log_with_bot('e', e)

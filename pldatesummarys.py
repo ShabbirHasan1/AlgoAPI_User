@@ -3,14 +3,20 @@ from services import *
 
 pldatesummarysrouter = APIRouter()
 
-@pldatesummarysrouter.get("/")
+@pldatesummarysrouter.get("/",response_model=ResponseSchema)
 async def get_pldatesummarys_all():
-    pldatesummary = await AlgoPLDateSummary()
-    pldatesummary_data = await pldatesummary.get_pldatesummarys_all()
-    return pldatesummary_data
+    try:
+        pldatesummary = await AlgoPLDateSummary()
+        pldatesummarys = await pldatesummary.get_pldatesummarys_all()
+        return ResponseSchema(status='success', code='pldatesummary', description='ok', data=pldatesummarys)
+    except Exception as e:
+        return exception_handler(e)
 
-@pldatesummarysrouter.get("/{date}")
+@pldatesummarysrouter.get("/{date}",response_model=ResponseSchema)
 async def get_pldatesummarys_data(date: str):
-    pldatesummary = await AlgoPLDateSummary()
-    pldatesummary_data = await pldatesummary.get_pldatesummarys_data(date)
-    return pldatesummary_data
+    try:
+        pldatesummary = await AlgoPLDateSummary()
+        pldatesummary_data = await pldatesummary.get_pldatesummarys_data(date)
+        return ResponseSchema(status='success', code='pldatesummary', description='ok', data=[pldatesummary_data])
+    except Exception as e:
+        return exception_handler(e)

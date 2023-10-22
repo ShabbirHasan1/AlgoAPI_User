@@ -4,14 +4,20 @@ from services import *
 hedgessrouter = APIRouter()
 
 
-@hedgessrouter.get("/")
+@hedgessrouter.get("/",response_model=ResponseSchema)
 async def get_hedges_all():
-    hedge = await AlgoHedges()
-    hedge_data = await hedge.get_hedges_all()
-    return hedge_data
+    try:
+        hedge = await AlgoHedges()
+        hedges = await hedge.get_hedges_all()
+        return ResponseSchema(status='success', code='hedge', description='ok', data=hedges)
+    except Exception as e:
+        return exception_handler(e)
 
-@hedgessrouter.get("/{strategy}")
+@hedgessrouter.get("/{strategy}",response_model=ResponseSchema)
 async def get_hedge_data(strategy: str):
-    hedge = await AlgoHedges()
-    hedge_data = await hedge.get_hedges_data(strategy)
-    return hedge_data
+    try:
+        hedge = await AlgoHedges()
+        hedge_data = await hedge.get_hedges_data(strategy)
+        return ResponseSchema(status='success', code='hedge', description='ok', data=[hedge_data])
+    except Exception as e:
+        return exception_handler(e)

@@ -1,5 +1,11 @@
 from pydantic import BaseModel
-from typing import Optional
+
+
+class ResponseSchema(BaseModel):
+    status:str
+    code:str
+    description: str
+    data:list
 
 class SpreadsSchema(BaseModel):
     Broker: str

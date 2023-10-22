@@ -7,13 +7,13 @@ from mangum import Mangum
 
 from taskscheduler import *
 from commons_kafka import *
-from events import *
 from spreads import *
 from hedges import *
 from plfundsrisks import *
 from pldatesummarys import *
 from webhooks import *
-from user_account import *
+from streams import *
+
 
 app = FastAPI(title="AlgoAPI_User", version="1.0")
 router = APIRouter()
@@ -22,8 +22,8 @@ router.include_router(hedgessrouter, prefix="/hedges", tags=["Hedges"])
 router.include_router(plfundsrisksrouter, prefix="/plfundsrisks", tags=["PLFundsRisks"])
 router.include_router(pldatesummarysrouter, prefix="/pldatesummarys", tags=["PLDateSummarys"])
 router.include_router(webhooksrouter, prefix="/webhooks", tags=["WebHooks"])
-router.include_router(useraccountrouter, prefix="/user_account", tags=["UserAccount"])
-router.include_router(eventsrouter, prefix="/events", tags=["Events"])
+router.include_router(streamsrouter, prefix="/streams", tags=["Streams"])
+
 
 app.include_router(router)
 handler = Mangum(app)
