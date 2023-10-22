@@ -3,8 +3,13 @@ from services import *
 
 hedgessrouter = APIRouter()
 
-
 @hedgessrouter.get("/",response_model=ResponseSchema)
+async def get_hedges():
+    hedges = {"message": "Hedges!"}
+    return ResponseSchema(status='success', code='hedge', description='ok', data=[hedges])
+
+
+@hedgessrouter.get("/all",response_model=ResponseSchema)
 async def get_hedges_all():
     try:
         hedge = await AlgoHedges()

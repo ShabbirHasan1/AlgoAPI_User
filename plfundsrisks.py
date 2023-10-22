@@ -5,6 +5,12 @@ plfundsrisksrouter = APIRouter()
 
 
 @plfundsrisksrouter.get("/",response_model=ResponseSchema)
+async def get_plfundsrisks():
+    plfundsrisks = {"message": "PLFundsRisks!"}
+    return ResponseSchema(status='success', code='spread', description='ok', data=[plfundsrisks])
+
+
+@plfundsrisksrouter.get("/all",response_model=ResponseSchema)
 async def get_plfundsrisks_all():
     try:
         plfundsrisk = await AlgoPLFundsRisk()

@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, distinct
+from sqlalchemy import cast, DateTime
 
 from schemas import *
 
@@ -183,8 +184,7 @@ class PLFundsRiskRepository:
         return self.db.query(PLFundsRisk).filter_by(Strategy=strategy).all()
 
     async def fetch_by_date(self, date: str):
-        return self.db.query(PLFundsRisk).filter_by(Date=date).all()
-
+        return self.db.query(PLFundsRisk).filter(func.DATE(PLFundsRisk.DateTime) == date).all()
 
 async def get_SpreadsRepository():
     return await SpreadsRepository()

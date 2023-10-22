@@ -4,6 +4,12 @@ from services import *
 pldatesummarysrouter = APIRouter()
 
 @pldatesummarysrouter.get("/",response_model=ResponseSchema)
+async def get_pldatesummarys():
+    pldatesummarys = {"message": "PLDataSummarys!"}
+    return ResponseSchema(status='success', code='spread', description='ok', data=[pldatesummarys])
+
+
+@pldatesummarysrouter.get("/all",response_model=ResponseSchema)
 async def get_pldatesummarys_all():
     try:
         pldatesummary = await AlgoPLDateSummary()

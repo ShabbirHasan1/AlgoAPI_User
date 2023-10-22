@@ -20,10 +20,10 @@ class AlgoSpreads:
 
     async def get_spreads_data(self, strategy):
         try:
-            spread_data = await self.SpreadsRepository.fetch_by_strategy(strategy)
-            if spread_data is None:
-                raise DataNotFoundException(f"Spread data not found : {strategy}")
-            return SpreadsSchema(**spread_data.__dict__)
+            spreads = await self.SpreadsRepository.fetch_by_strategy(strategy)
+            if len(spreads) == 0:
+                raise DataNotFoundException(f"Spread data not found {strategy}")
+            return [SpreadsSchema(**record.__dict__) for record in spreads]
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -53,10 +53,10 @@ class AlgoHedges:
 
     async def get_hedges_data(self, strategy):
         try:
-            hedge_data = await self.HedgesRepository.fetch_by_strategy(strategy)
-            if hedge_data is None:
-                raise DataNotFoundException(f"Hedge data not found : {strategy}")
-            return HedgesSchema(**hedge_data.__dict__)
+            hedges = await self.HedgesRepository.fetch_by_strategy(strategy)
+            if len(hedges) == 0:
+                raise DataNotFoundException(f"Hedge data not found")
+            return [HedgesSchema(**record.__dict__) for record in hedges]
         except Exception as e:
             await log_with_bot('e', e)
             raise e

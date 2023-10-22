@@ -3,8 +3,13 @@ from services import *
 
 spreadsrouter = APIRouter()
 
-
 @spreadsrouter.get("/",response_model=ResponseSchema)
+async def get_spreads():
+    spreads = {"message": "Spreads!"}
+    return ResponseSchema(status='success', code='spread', description='ok', data=[spreads])
+
+
+@spreadsrouter.get("/all",response_model=ResponseSchema)
 async def get_spreads_all():
     try:
         spread = await AlgoSpreads()
@@ -17,7 +22,7 @@ async def get_spreads_all():
 async def get_spreads_data(strategy: str):
     try:
         spread = await AlgoSpreads()
-        spread_data = await spread.get_spreads_data(strategy)
-        return ResponseSchema(status='success', code='spread', description='ok', data=[spread_data])
+        spreads= await spread.get_spreads_data(strategy)
+        return ResponseSchema(status='success', code='spread', description='ok', data=spreads)
     except Exception as e:
         return exception_handler(e)
