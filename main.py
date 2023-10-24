@@ -98,7 +98,7 @@ if __name__ == "__main__":
 
     if is_running_in_docker():
         if not (settings.MarketOpenTime < datetime.datetime.now() < settings.MarketCloseTime):
-            time.sleep(45)
+            time.sleep(55)
 
     t = threading.Thread(target=asyncio.run, args=(trigger_task_scheduler(),))
     t.start()
