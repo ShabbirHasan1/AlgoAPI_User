@@ -1,7 +1,7 @@
 from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 import json
 from commons_telegram import *
-
+import pandas as pd
 
 async def initialize_kafka():
     try:
@@ -44,7 +44,8 @@ async def create_consumer(consumerGroupId='defualt-group'):
 async def consume_messages_kafka():
     try:
         async for msg in settings.kafka_consumer:
-            await log_with_bot('i', f"Kafka - {SystemDateTime()} : {msg.value}")
+            processingTime = (SystemDateTime() -  pd.to_datetime(msg.DateTime)).seconds
+            await log_with_bot('i', f"Kafka - {processingTime}s : {msg.value}")
     except Exception as e:
         await log_with_bot('e', e)
 
