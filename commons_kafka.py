@@ -44,8 +44,8 @@ async def create_consumer(consumerGroupId='defualt-group'):
 async def consume_messages_kafka():
     try:
         async for msg in settings.kafka_consumer:
-            processingTime = (SystemDateTime() -  pd.to_datetime(msg.value['DateTime']))
-            await log_with_bot('i', f"Kafka - TimeTaken- {processingTime} : {msg.value}")
+            processingTime = (SystemDateTime() -  pd.to_datetime(msg.value['DateTime'])).microseconds
+            await log_with_bot('i', f"Kafka - TimeTaken- {processingTime}ms : {msg.value}")
     except Exception as e:
         await log_with_bot('e', e)
 
