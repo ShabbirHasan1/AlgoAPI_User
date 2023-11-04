@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import func, and_, distinct
 from sqlalchemy import cast, DateTime
 
+from models import *
 from schemas import *
 
 from commons_mysql import *
@@ -19,34 +20,35 @@ class SpreadsRepository:
     def __await__(self):
         return self.async_init().__await__()
 
-    async def create(self, spreadsdata: SpreadsSchema):
-        self.db.add(spreadsdata)
+    async def create(self, spreadsdata: SpreadsSchemaIn):
+        spread_model = SpreadsModel(**spreadsdata.__dict__)
+        self.db.add(spread_model)
         self.db.commit()
-        self.db.refresh(spreadsdata)
-        return spreadsdata
+        self.db.refresh(spread_model)
+        return spread_model
 
-    async def update(self, spreadsdata: SpreadsSchema):
-        db_spreads = await self.db.query(Spreads).filter_by(TradeId=spreadsdata.TradeId).one()
+    async def update(self, spreadsdata: SpreadsSchemaOut):
+        db_spreads = await self.db.query(SpreadsModel).filter_by(TradeId=spreadsdata.TradeId).one()
         for field, value in spreadsdata.items():
             setattr(spreadsdata, field, value)
         self.db.commit()
         self.db.refresh(db_spreads)
         return db_spreads
 
-    async def modify(self, spreadsdata: SpreadsSchema):
+    async def modify(self, spreadsdata: SpreadsSchemaOut):
         self.db.merge(spreadsdata)  # This will handle both update and create operations
         self.db.commit()
         self.db.refresh(spreadsdata)
         return spreadsdata
 
     async def fetch_all(self):
-        return self.db.query(Spreads).all()
+        return self.db.query(SpreadsModel).all()
 
     async def fetch_by_strategy(self, strategy: str):
-        return self.db.query(Spreads).filter_by(Strategy=strategy).all()
+        return self.db.query(SpreadsModel).filter_by(Strategy=strategy).all()
 
     async def fetch_by_tradeid(self, tradeid: int):
-        return self.db.query(Spreads).filter_by(TradeId=tradeid).first()
+        return self.db.query(SpreadsModel).filter_by(TradeId=tradeid).first()
 
 
 class HedgesRepository:
@@ -61,37 +63,38 @@ class HedgesRepository:
     def __await__(self):
         return self.async_init().__await__()
 
-    async def create(self, hedgesdata: HedgesSchema):
-        self.db.add(hedgesdata)
+    async def create(self, hedgesdata: HedgesSchemaIn):
+        hedge_model = HedgesModel(**hedgesdata.__dict__)
+        self.db.add(hedge_model)
         self.db.commit()
-        self.db.refresh(hedgesdata)
-        return hedgesdata
+        self.db.refresh(hedge_model)
+        return hedge_model
 
-    async def update(self, hedgesdata: HedgesSchema):
-        db_hedges = await self.db.query(Hedges).filter_by(TradeId=hedgesdata.TradeId).one()
+    async def update(self, hedgesdata: HedgesSchemaOut):
+        db_hedges = await self.db.query(HedgesModel).filter_by(TradeId=hedgesdata.TradeId).one()
         for field, value in hedgesdata.items():
             setattr(hedgesdata, field, value)
         self.db.commit()
         self.db.refresh(db_hedges)
         return db_hedges
 
-    async def modify(self, hedgedata: HedgesSchema):
+    async def modify(self, hedgedata: HedgesSchemaOut):
         self.db.merge(hedgedata)  # This will handle both update and create operations
         self.db.commit()
         self.db.refresh(hedgedata)
         return hedgedata
 
     async def fetch_all(self):
-        return self.db.query(Hedges).all()
+        return self.db.query(HedgesModel).all()
 
     async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(Hedges).filter_by(Broker=broker, UserId=user_id).first()
+        return self.db.query(HedgesModel).filter_by(Broker=broker, UserId=user_id).first()
 
     async def fetch_by_strategy(self, strategy: str):
-        return self.db.query(Hedges).filter_by(Strategy=strategy).all()
+        return self.db.query(HedgesModel).filter_by(Strategy=strategy).all()
 
     async def fetch_by_tradeid(self, tradeid: int):
-        return self.db.query(Hedges).filter_by(TradeId=tradeid).first()
+        return self.db.query(HedgesModel).filter_by(TradeId=tradeid).first()
 
 
 class PLDateSummaryRepository:

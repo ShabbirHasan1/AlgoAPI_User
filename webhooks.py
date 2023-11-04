@@ -19,17 +19,20 @@ async def webhook_tradesignal(request: Request, background_tasks: BackgroundTask
     return {"status_code": 200, "message": "Trade signal received and being processed in the background"}
 
 
-async def process_event(event: dict):
+async def process_event(events: list):
     try:
         # await log_with_bot('i',f"Event {event} processed - {datetime.datetime.now()}")
-        await log_with_bot('i', f"Event - {SystemDateTime()} : {event}")
+        await log_with_bot('i', f"Event - {SystemDateTime()} : {events}")
     except Exception as e:
         await log_with_bot('e',e)
 
 
-async def process_trade_signal(tradesignal: dict):
+async def process_trade_signal(tradesignals: list):
     try:
+        algoUser = AlgoUser(settings.Broker,Settings.UserId)
+        await algoUser.execute_signals(tradesignals)
+
         # await log_with_bot('i',f"TradeSignal {tradesignal} processed - {datetime.datetime.now()}")
-        await log_with_bot('i', f"TradeSignal - {SystemDateTime()} : {tradesignal}")
+        await log_with_bot('i', f"TradeSignal - {SystemDateTime()} : {tradesignals}")
     except Exception as e:
         await log_with_bot('e', e)

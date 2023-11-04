@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
 
-class Spreads(Base):
+class SpreadsModel(Base):
     __tablename__ = 'trades_spreads'
 
     TradeId = Column(Integer, primary_key=True, autoincrement=True)
@@ -68,8 +68,11 @@ class Spreads(Base):
     PnlNet = Column(Float)
     Remarks = Column(String)
 
+    def to_dict(self):
+        return {field.name: getattr(self, field.name) for field in self.__table__.c}
 
-class Hedges(Base):
+
+class HedgesModel(Base):
     __tablename__ = 'trades_hedges'
 
     TradeId = Column(Integer, primary_key=True, autoincrement=True)

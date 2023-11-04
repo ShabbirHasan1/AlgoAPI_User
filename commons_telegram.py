@@ -63,21 +63,21 @@ async def log_with_bot(level, message):
 
     log(level, message)
 
-    chat_id = get_telegram_chat_id()
-    try:
-        if level == 'e':
-            await settings.TelegramBot.send_message(chat_id=chat_id,
-                                                    text=str("`" + level + " : " + UserId + " : " + message + "`"),
-                                                    parse_mode='Markdown')
-
-        elif level == 'w':
-            await settings.TelegramBot.send_message(chat_id=chat_id,
-                                                    text=str("<u>" + level + " : " + UserId + " : " + message + "</u>"),
-                                                    parse_mode='HTML')
-
-        else:
-            await settings.TelegramBot.send_message(chat_id=chat_id,
-                                                    text=str(level + " : " + UserId + " : " + message))
-
-    except Exception as e:
-        log('e', e)
+    # chat_id = get_telegram_chat_id()
+    # try:
+    #     if level == 'e':
+    #         await settings.TelegramBot.send_message(chat_id=chat_id,
+    #                                                 text=str("`" + level + " : " + UserId + " : " + message + "`"),
+    #                                                 parse_mode='Markdown')
+    #
+    #     elif level == 'w':
+    #         await settings.TelegramBot.send_message(chat_id=chat_id,
+    #                                                 text=str("<u>" + level + " : " + UserId + " : " + message + "</u>"),
+    #                                                 parse_mode='HTML')
+    #
+    #     else:
+    #         await settings.TelegramBot.send_message(chat_id=chat_id,
+    #                                                 text=str(level + " : " + UserId + " : " + message))
+    #
+    # except Exception as e:
+    #     log('e', e)

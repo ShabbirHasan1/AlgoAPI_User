@@ -10,8 +10,8 @@ engine_algo_livetrades = create_engine(SQLALCHEMY_DATABASE_URL, echo=False, echo
 
 
 SessionLocal = sessionmaker(autocommit=False)
-SessionLocal.configure(binds={Spreads: engine_algo_livetrades,
-                              Hedges: engine_algo_livetrades,
+SessionLocal.configure(binds={SpreadsModel: engine_algo_livetrades,
+                              HedgesModel: engine_algo_livetrades,
                               PLFundsRisk: engine_algo_livetrades,
                               PLDateSummary: engine_algo_livetrades})
 

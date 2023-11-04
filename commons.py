@@ -215,22 +215,7 @@ class ApiUserProxy:
                 return await response.json()
 
 
-class AlgoUser():
-    def __init__(self, broker, userid):
-        self.broker = broker
-        self.userid = userid
 
-    async def notify_event(self, data):
-        userProxy = ApiUserProxy()
-        path = '/webhooks/event'
-        response = await userProxy.post(path, json=data)
-        return response
-
-    async def notify_tradesignal(self, data):
-        userProxy = ApiUserProxy()
-        path = '/webhooks/tradesignal'
-        response = await userProxy.post(path, json=data)
-        return response
 
 
 class AlgoData:
