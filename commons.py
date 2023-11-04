@@ -260,8 +260,9 @@ class AlgoData:
 
 
 class AlgoBroker:
-    def __init__(self, broker):
+    def __init__(self, broker,userid):
         self.broker = broker
+        self.userid = userid
 
     async def get_quote_live(self, symbol):
         brokerProxy = ApiDataProxy()
@@ -282,6 +283,27 @@ class AlgoBroker:
         path = '/quotes/ohlc'
         path = path + '/' + timeframe + '/' + symbol.upper()
         response = await brokerProxy.get(path)
+        return response
+
+    async def create_order(self, order):
+        brokerProxy = ApiBrokerProxy(self.broker)
+        path = '/orders/createorder'
+        path = path + '/' + self.broker + '/' + self.userid
+        response = await brokerProxy.post(path,json=order)
+        return response
+
+    async def cancel_order(self, order):
+        brokerProxy = ApiBrokerProxy(self.broker)
+        path = '/orders/cancelorder'
+        path = path + '/' + self.broker + '/' + self.userid
+        response = await brokerProxy.post(path,json=order)
+        return response
+
+    async def modify_order(self, order):
+        brokerProxy = ApiBrokerProxy(self.broker)
+        path = '/orders/modifyorder'
+        path = path + '/' + self.broker + '/' + self.userid
+        response = await brokerProxy.post(path,json=order)
         return response
 
 

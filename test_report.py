@@ -1,3 +1,6 @@
+import datetime
+import time
+
 from commons_kafka import *
 from services import *
 import aiohttp
@@ -10,8 +13,50 @@ initialize_telegram()
 async def main():
 
     try:
+        broker = 'Kotak'
+        userid = 'XWQF2'
+        kotak = AlgoBroker(broker, userid)
 
-        pass
+        # while True:
+        #     order = {
+        #         "orderid": 231104000006347,
+        #         "amo": "NO"
+        #     }
+        #
+        #     kotak = AlgoBroker(broker, userid)
+        #     print(await kotak.cancel_order(order))
+        #
+        #     break
+        #     # time.sleep(1)
+
+        while True:
+            start_time = datetime.datetime.now()
+            order ={
+                    "strategy": "Test1",
+                    "exchange": "NSE",
+                    "segment": "nse_cm",
+                    "symbol": "ITC",
+                    "productType": "CNC",
+                    "orderType": "MKT",
+                    "orderPurpose": "Entry",
+                    "transactionType": "B",
+                    "quantity": 1,
+                    "orderPrice": 430,
+                    "triggerPrice": 430,
+                    "validity": "DAY",
+                    "amo": "NO",
+                    "tag": ""
+                }
+
+            # t = threading.Thread(target=lambda: asyncio.run(kotak.create_order(order)))
+            # t.start()
+
+            response = await kotak.create_order(order)
+            end_time = datetime.datetime.now()
+            time_taken = (end_time - start_time).microseconds/ 1000
+            print(time_taken,response)
+            break
+            # time.sleep(1)
 
         # screenerList = await get_screener_stocks_chartink('kgl-mtf-up-v1')
         # print(screenerList)
