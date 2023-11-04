@@ -49,8 +49,11 @@ async def consume_messages_kafka():
 
             # await log_with_bot('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")
 
-            t = threading.Thread(target=asyncio.run, args=(log_with_bot,('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")))
+            # Create a new thread to run the asyncio function
+            t = threading.Thread(target=lambda: asyncio.get_event_loop().run_until_complete(log_with_bot('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")))
             t.start()
+
+
 
     except Exception as e:
         await log_with_bot('e', e)
