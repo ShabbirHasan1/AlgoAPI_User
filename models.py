@@ -7,7 +7,7 @@ Base = declarative_base()
 class SpreadsModel(Base):
     __tablename__ = 'trades_spreads'
 
-    TradeId = Column(Integer, primary_key=True, autoincrement=True)
+    SpreadId = Column(Integer, primary_key=True, autoincrement=True)
     Broker = Column(String(30), nullable=False)
     UserId = Column(String(30), nullable=False)
     Date = Column(String(10))
@@ -68,14 +68,10 @@ class SpreadsModel(Base):
     PnlNet = Column(Float)
     Remarks = Column(String)
 
-    def to_dict(self):
-        return {field.name: getattr(self, field.name) for field in self.__table__.c}
-
-
 class HedgesModel(Base):
     __tablename__ = 'trades_hedges'
 
-    TradeId = Column(Integer, primary_key=True, autoincrement=True)
+    HedgeId = Column(Integer, primary_key=True, autoincrement=True)
     Broker = Column(String(30), nullable=False)
     UserId = Column(String(30), nullable=False)
     Date = Column(String(10))

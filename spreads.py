@@ -12,7 +12,7 @@ async def get_spreads():
 @spreadsrouter.get("/all",response_model=ResponseSchema)
 async def get_spreads_all():
     try:
-        spread = await AlgoSpread()
+        spread = await AlgoSpread(settings.Broker,settings.UserId)
         spreads = await spread.get_spreads_all()
 
         return ResponseSchema(status='success', code='spread', description='ok', data=spreads)
@@ -22,8 +22,9 @@ async def get_spreads_all():
 @spreadsrouter.get("/{strategy}",response_model=ResponseSchema)
 async def get_spreads_data(strategy: str):
     try:
-        spread = await AlgoSpread()
-        spreads= await spread.get_spreads_data(strategy)
+        spread = await AlgoSpread(settings.Broker,settings.UserId)
+
+        spreads= await spread.get_spread_data(strategy)
         return ResponseSchema(status='success', code='spread', description='ok', data=spreads)
     except Exception as e:
         return exception_handler(e)
@@ -32,7 +33,7 @@ async def get_spreads_data(strategy: str):
 @spreadsrouter.post("/createspread",response_model=ResponseSchema)
 async def create_spread_data(spread: SpreadsSchemaIn):
     try:
-        algoSpreads = await AlgoSpread()
+        algoSpreads = await AlgoSpread(settings.Broker,settings.UserId)
         spread_data = await algoSpreads.create_spread(spread)
         return ResponseSchema(status='success', code='spread', description='ok', data=[spread_data])
     except Exception as e:

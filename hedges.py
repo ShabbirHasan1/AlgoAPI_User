@@ -12,7 +12,7 @@ async def get_hedges():
 @hedgessrouter.get("/all",response_model=ResponseSchema)
 async def get_hedges_all():
     try:
-        hedge = await AlgoHedge()
+        hedge = await AlgoHedge(settings.Broker,settings.UserId)
         hedges = await hedge.get_hedges_all()
         return ResponseSchema(status='success', code='hedge', description='ok', data=hedges)
     except Exception as e:
@@ -21,7 +21,7 @@ async def get_hedges_all():
 @hedgessrouter.get("/{strategy}",response_model=ResponseSchema)
 async def get_hedge_data(strategy: str):
     try:
-        hedge = await AlgoHedge()
+        hedge = await AlgoHedge(settings.Broker,settings.UserId)
         hedge_data = await hedge.get_hedges_data(strategy)
         return ResponseSchema(status='success', code='hedge', description='ok', data=[hedge_data])
     except Exception as e:
@@ -31,7 +31,7 @@ async def get_hedge_data(strategy: str):
 @hedgessrouter.post("/createhedge",response_model=ResponseSchema)
 async def create_hedge_data(hedge: HedgesSchemaIn):
     try:
-        algoHedges = await AlgoHedge()
+        algoHedges = await AlgoHedge(settings.Broker,settings.UserId)
         hedge_data = await algoHedges.create_hedge(hedge)
         return ResponseSchema(status='success', code='hedge', description='ok', data=[hedge_data])
     except Exception as e:

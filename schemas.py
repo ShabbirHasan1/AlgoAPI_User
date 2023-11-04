@@ -72,7 +72,7 @@ class SpreadsSchemaIn(BaseModel):
         from_attributes = True
 
 class SpreadsSchemaOut(BaseModel):
-    TradeId: int
+    SpreadId: int
     Broker: str
     UserId: str
     Date: Optional[str] = None
@@ -176,7 +176,7 @@ class HedgesSchemaIn(BaseModel):
         from_attributes = True
 
 class HedgesSchemaOut(BaseModel):
-    TradeId: int
+    HedgeId: int
     Broker: str
     UserId: str
     Date: Optional[str] = None
@@ -251,3 +251,19 @@ class PLFundsRiskSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+class CreateOrderSchema(BaseModel):
+    strategy: str
+    exchange: str
+    segment: str
+    symbol: str
+    productType: str
+    orderType: str
+    orderPurpose: str
+    transactionType: str
+    quantity: int
+    orderPrice: float
+    triggerPrice: float
+    validity: str
+    amo: str
+    tag: str
