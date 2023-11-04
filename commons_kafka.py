@@ -2,7 +2,8 @@ from aiokafka import AIOKafkaConsumer, AIOKafkaProducer
 import json
 from commons_telegram import *
 import pandas as pd
-
+import  threading
+import asyncio
 async def initialize_kafka():
     try:
         settings.kafka_producer = await create_producer()
@@ -45,7 +46,12 @@ async def consume_messages_kafka():
     try:
         async for msg in settings.kafka_consumer:
             processingTime = (SystemDateTime() -  pd.to_datetime(msg.value['DateTime'])).seconds
-            await log_with_bot('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")
+
+            # await log_with_bot('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")
+
+            t = threading.Thread(target=asyncio.run, args=(log_with_bot('i', f"Kafka - TimeTaken- {processingTime}s : {msg.value}")))
+            t.start()
+
     except Exception as e:
         await log_with_bot('e', e)
 
