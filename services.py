@@ -22,12 +22,32 @@ class AlgoSpread:
     def __await__(self):
         return self.async_init().__await__()
 
-    async def get_spreads_data(self, strategy):
+    async def get_spreads_strategy(self, strategy):
         try:
             spreads = await self.SpreadsRepository.fetch_by_strategy(strategy)
             if len(spreads) == 0:
                 raise DataNotFoundException(f"Spread data not found {strategy}")
             return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def get_spreads_strategy_status(self, strategy,status):
+        try:
+            spreads = await self.SpreadsRepository.fetch_by_strategy_status(strategy,status)
+            if len(spreads) == 0:
+                raise DataNotFoundException(f"Spread data not found {strategy}")
+            return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def get_spread(self, spreadid):
+        try:
+            spread_data = await self.SpreadsRepository.fetch_by_spreadid(spreadid)
+            if spread_data is None:
+                raise DataNotFoundException(f"Spread data not found")
+            return SpreadsSchemaOut(**spread_data.__dict__)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -48,10 +68,26 @@ class AlgoSpread:
         pass
 
     async def update(self, spread):
-        pass
+        try:
+            spread_data = await self.SpreadsRepository.update(spread)
+            if spread_data is None:
+                raise DataNotFoundException(f"Spread data not found")
+            return SpreadsSchemaOut(**spread_data.__dict__)
 
-    async def delete(self, spread):
-        pass
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def delete(self, spreadid):
+        try:
+            spread_data = await self.SpreadsRepository.delete(spreadid)
+            if spread_data is None:
+                raise DataNotFoundException(f"Spread data not found {spreadid}")
+            return SpreadsSchemaOut(**spread_data.__dict__)
+
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
 
     async def create(self,spread):
         try:
@@ -208,12 +244,31 @@ class AlgoHedge:
     def __await__(self):
         return self.async_init().__await__()
 
-    async def get_hedges_data(self, strategy):
+    async def get_hedges_strategy(self, strategy):
         try:
             hedges = await self.HedgesRepository.fetch_by_strategy(strategy)
             if len(hedges) == 0:
                 raise DataNotFoundException(f"Hedge data not found")
             return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+    async def get_hedges_strategy_status(self, strategy,status):
+        try:
+            hedges = await self.HedgesRepository.fetch_by_strategy_status(strategy,status)
+            if len(hedges) == 0:
+                raise DataNotFoundException(f"Hedge data not found")
+            return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def get_hedge(self, hedgeid):
+        try:
+            hedge_data = await self.HedgesRepository.fetch_by_hedgeid(hedgeid)
+            if hedge_data is None:
+                raise DataNotFoundException(f"Hedge data not found")
+            return HedgesSchemaOut(**hedge_data.__dict__)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -228,9 +283,32 @@ class AlgoHedge:
             await log_with_bot('e', e)
             raise e
 
-    async def create_hedge(self,spread):
+
+    async def update(self, hedge):
         try:
-            hedge_data = await self.HedgesRepository.create(spread)
+            hedge_data = await self.HedgesRepository.update(hedge)
+            if hedge_data is None:
+                raise DataNotFoundException(f"Hedge data not found")
+            return HedgesSchemaOut(**hedge_data.__dict__)
+
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def delete(self, hedgeid):
+        try:
+            hedge_data = await self.HedgesRepository.delete(hedgeid)
+            if hedge_data is None:
+                raise DataNotFoundException(f"Hedge data not found {hedgeid}")
+            return HedgesSchemaOut(**hedge_data.__dict__)
+
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
+    async def create(self,hedge):
+        try:
+            hedge_data = await self.HedgesRepository.create(hedge)
             return HedgesSchemaOut(**hedge_data.__dict__)
 
         except Exception as e:
@@ -320,10 +398,17 @@ class AlgoTrade:
 
     async def entry(self,order):
         tradeDetails = {}
-        # mainOrderDetails = self.algoBroker.create_order(mainOrder)
-        # slOrderDetails = self.algoBroker.create_order(slOrder)
-        # tgOrderDetails = self.algoBroker.create_order(tgOrder)
-        #
+        mainOrderDetails = self.algoBroker.create_order(order)
+        if mainOrderDetails is not None:
+            print(mainOrderDetails)
+
+        slOrderDetails = self.algoBroker.create_order(order)
+        if slOrderDetails is not None:
+            print(slOrderDetails)
+
+        tgOrderDetails = self.algoBroker.create_order(order)
+        if tgOrderDetails is not None:
+            print(tgOrderDetails)
         return tradeDetails
 
     async def exit(self,order):

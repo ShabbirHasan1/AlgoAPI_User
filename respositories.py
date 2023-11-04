@@ -28,9 +28,10 @@ class SpreadsRepository:
         return spread_model
 
     async def update(self, spreadsdata: SpreadsSchemaOut):
-        db_spreads = await self.db.query(SpreadsModel).filter_by(TradeId=spreadsdata.TradeId).one()
-        for field, value in spreadsdata.items():
-            setattr(spreadsdata, field, value)
+        db_spreads = self.db.query(SpreadsModel).filter_by(SpreadId=spreadsdata.SpreadId).one()
+        spreadsdata_dict = spreadsdata.__dict__
+        for field, value in spreadsdata_dict.items():
+            setattr(db_spreads, field, value)
         self.db.commit()
         self.db.refresh(db_spreads)
         return db_spreads
@@ -41,14 +42,24 @@ class SpreadsRepository:
         self.db.refresh(spreadsdata)
         return spreadsdata
 
+    async def delete(self, spreadid):
+        db_spreads = self.db.query(SpreadsModel).filter_by(SpreadId=spreadid).one_or_none()
+        if db_spreads:
+            self.db.delete(db_spreads)
+            self.db.commit()
+            return db_spreads
+
     async def fetch_all(self):
         return self.db.query(SpreadsModel).all()
 
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(SpreadsModel).filter_by(Strategy=strategy).all()
 
-    async def fetch_by_tradeid(self, tradeid: int):
-        return self.db.query(SpreadsModel).filter_by(TradeId=tradeid).first()
+    async def fetch_by_strategy_status(self, strategy: str,status: str):
+        return self.db.query(SpreadsModel).filter_by(Strategy=strategy,Status=status).all()
+
+    async def fetch_by_spreadid(self, spreadid: int):
+        return self.db.query(SpreadsModel).filter_by(SpreadId=spreadid).first()
 
 
 class HedgesRepository:
@@ -71,18 +82,27 @@ class HedgesRepository:
         return hedge_model
 
     async def update(self, hedgesdata: HedgesSchemaOut):
-        db_hedges = await self.db.query(HedgesModel).filter_by(TradeId=hedgesdata.TradeId).one()
-        for field, value in hedgesdata.items():
-            setattr(hedgesdata, field, value)
+        db_hedges = self.db.query(HedgesModel).filter_by(HedgeId=hedgesdata.HedgeId).one()
+        hedgesdata_dict = hedgesdata.__dict__
+        for field, value in hedgesdata_dict.items():
+            setattr(db_hedges, field, value)
         self.db.commit()
         self.db.refresh(db_hedges)
         return db_hedges
+
 
     async def modify(self, hedgedata: HedgesSchemaOut):
         self.db.merge(hedgedata)  # This will handle both update and create operations
         self.db.commit()
         self.db.refresh(hedgedata)
         return hedgedata
+
+    async def delete(self, hedgeid):
+        db_hedges = self.db.query(HedgesModel).filter_by(HedgeId=hedgeid).one_or_none()
+        if db_hedges:
+            self.db.delete(db_hedges)
+            self.db.commit()
+            return db_hedges
 
     async def fetch_all(self):
         return self.db.query(HedgesModel).all()
@@ -93,8 +113,11 @@ class HedgesRepository:
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(HedgesModel).filter_by(Strategy=strategy).all()
 
-    async def fetch_by_tradeid(self, tradeid: int):
-        return self.db.query(HedgesModel).filter_by(TradeId=tradeid).first()
+    async def fetch_by_strategy_status(self, strategy: str,status: str):
+        return self.db.query(HedgesModel).filter_by(Strategy=strategy,Status=status).all()
+
+    async def fetch_by_hedgeid(self, hedgeid: int):
+        return self.db.query(HedgesModel).filter_by(HedgeId=hedgeid).first()
 
 
 class PLDateSummaryRepository:
