@@ -48,10 +48,10 @@ async def update_spread_data(pldatesummary: PLDateSummarySchema):
 
 
 @pldatesummarysrouter.delete("/deletepldatesummary",response_model=ResponseSchema)
-async def delete_spread_data(broker: str,userid: str, datetime: str):
+async def delete_spread_data(broker: str,userid: str, date: str):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
-        plDateSummary_data = await plDateSummary.delete(broker,userid,datetime)
+        plDateSummary_data = await plDateSummary.delete(broker,userid,date)
         return ResponseSchema(status='success', code='pldatesummary', description='ok', data=[plDateSummary_data])
     except Exception as e:
         return exception_handler(e)

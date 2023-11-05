@@ -51,10 +51,10 @@ async def update_spread_data(plfundsrisk: PLFundsRiskSchema):
 
 
 @plfundsrisksrouter.delete("/deleteplfundsrisk",response_model=ResponseSchema)
-async def delete_spread_data(broker: str,userid: str, date: str):
+async def delete_spread_data(broker: str,userid: str, datetime: str):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
-        plFundsRisk_data = await plFundsRisk.delete(broker,userid,date)
+        plFundsRisk_data = await plFundsRisk.delete(broker,userid,datetime)
         return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk_data])
     except Exception as e:
         return exception_handler(e)
