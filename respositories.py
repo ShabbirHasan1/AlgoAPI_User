@@ -29,8 +29,7 @@ class SpreadsRepository:
 
     async def update(self, spreadsdata: SpreadsSchemaOut):
         db_spreads = self.db.query(SpreadsModel).filter_by(SpreadId=spreadsdata.SpreadId).one()
-        spreadsdata_dict = spreadsdata.__dict__
-        for field, value in spreadsdata_dict.items():
+        for field, value in spreadsdata.__dict__.items():
             setattr(db_spreads, field, value)
         self.db.commit()
         self.db.refresh(db_spreads)
@@ -83,8 +82,7 @@ class HedgesRepository:
 
     async def update(self, hedgesdata: HedgesSchemaOut):
         db_hedges = self.db.query(HedgesModel).filter_by(HedgeId=hedgesdata.HedgeId).one()
-        hedgesdata_dict = hedgesdata.__dict__
-        for field, value in hedgesdata_dict.items():
+        for field, value in hedgesdata.__dict__.items():
             setattr(db_hedges, field, value)
         self.db.commit()
         self.db.refresh(db_hedges)
@@ -142,8 +140,7 @@ class PLDateSummaryRepository:
         db_data_summary = await self.db.query(PLDateSummaryModel).filter_by(Strategy=pldatesummarydata.Strategy,
                                                                             Broker=pldatesummarydata.Broker,
                                                                             UserId=pldatesummarydata.UserId).one()
-        pldatesummary_dict = pldatesummarydata.__dict__
-        for field, value in pldatesummary_dict.items():
+        for field, value in pldatesummarydata.__dict__.items():
             setattr(db_data_summary, field, value)
         self.db.commit()
         self.db.refresh(db_data_summary)
@@ -197,8 +194,8 @@ class PLFundsRiskRepository:
     async def update(self, plfundsriskdata: PLFundsRiskSchema):
         db_pl_funds_risk = await self.db.query(PLFundsRiskModel).filter_by(Broker=plfundsriskdata.Broker,
                                                                            UserId=plfundsriskdata.UserId).one()
-        plfundsrisk_dict = plfundsriskdata.__dict__
-        for field, value in plfundsrisk_dict.items():
+
+        for field, value in plfundsriskdata.__dict__.items():
             setattr(db_pl_funds_risk, field, value)
         self.db.commit()
         self.db.refresh(db_pl_funds_risk)
