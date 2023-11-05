@@ -1,9 +1,9 @@
-import datetime
+from fastapi.encoders import jsonable_encoder
 from commons_telegram import *
 from respositories import *
 import pandas as pd
 import asyncio
-
+import datetime
 
 
 
@@ -27,7 +27,8 @@ class AlgoSpread:
             spreads = await self.SpreadsRepository.fetch_by_strategy(strategy)
             if len(spreads) == 0:
                 raise DataNotFoundException(f"Spread data not found {strategy}")
-            return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+            # return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+            return jsonable_encoder(spreads)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -37,7 +38,8 @@ class AlgoSpread:
             spreads = await self.SpreadsRepository.fetch_by_strategy_status(strategy,status)
             if len(spreads) == 0:
                 raise DataNotFoundException(f"Spread data not found {strategy}")
-            return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+            # return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+            return jsonable_encoder(spreads)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -47,7 +49,8 @@ class AlgoSpread:
             spread_data = await self.SpreadsRepository.fetch_by_spreadid(spreadid)
             if spread_data is None:
                 raise DataNotFoundException(f"Spread data not found")
-            return SpreadsSchemaOut(**spread_data.__dict__)
+            # return SpreadsSchemaOut(**spread_data.__dict__)
+            return jsonable_encoder(spread_data)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -58,8 +61,8 @@ class AlgoSpread:
             if len(spreads) == 0:
                 raise DataNotFoundException(f"Spread data not found")
 
-            return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
-
+            # return [SpreadsSchemaOut(**record.__dict__) for record in spreads]
+            return jsonable_encoder(spreads)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -72,7 +75,8 @@ class AlgoSpread:
             spread_data = await self.SpreadsRepository.update(spread)
             if spread_data is None:
                 raise DataNotFoundException(f"Spread data not found")
-            return SpreadsSchemaOut(**spread_data.__dict__)
+            # return SpreadsSchemaOut(**spread_data.__dict__)
+            return jsonable_encoder(spread_data)
 
         except Exception as e:
             await log_with_bot('e', e)
@@ -83,7 +87,8 @@ class AlgoSpread:
             spread_data = await self.SpreadsRepository.delete(spreadid)
             if spread_data is None:
                 raise DataNotFoundException(f"Spread data not found {spreadid}")
-            return SpreadsSchemaOut(**spread_data.__dict__)
+            # return SpreadsSchemaOut(**spread_data.__dict__)
+            return jsonable_encoder(spread_data)
 
         except Exception as e:
             await log_with_bot('e', e)
@@ -92,7 +97,8 @@ class AlgoSpread:
     async def create(self,spread):
         try:
             spread_data = await self.SpreadsRepository.create(spread)
-            return SpreadsSchemaOut(**spread_data.__dict__)
+            # return SpreadsSchemaOut(**spread_data.__dict__)
+            return jsonable_encoder(spread_data)
 
         except Exception as e:
             await log_with_bot('e', e)
@@ -310,7 +316,8 @@ class AlgoHedge:
             hedges = await self.HedgesRepository.fetch_by_strategy(strategy)
             if len(hedges) == 0:
                 raise DataNotFoundException(f"Hedge data not found")
-            return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            # return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            return jsonable_encoder(hedges)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -319,7 +326,8 @@ class AlgoHedge:
             hedges = await self.HedgesRepository.fetch_by_strategy_status(strategy,status)
             if len(hedges) == 0:
                 raise DataNotFoundException(f"Hedge data not found")
-            return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            # return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            return jsonable_encoder(hedges)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -329,7 +337,8 @@ class AlgoHedge:
             hedge_data = await self.HedgesRepository.fetch_by_hedgeid(hedgeid)
             if hedge_data is None:
                 raise DataNotFoundException(f"Hedge data not found")
-            return HedgesSchemaOut(**hedge_data.__dict__)
+            # return HedgesSchemaOut(**hedge_data.__dict__)
+            return jsonable_encoder(hedge_data)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -339,7 +348,8 @@ class AlgoHedge:
             hedges = await self.HedgesRepository.fetch_all()
             if len(hedges) == 0:
                 raise DataNotFoundException(f"Hedge data not found")
-            return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            # return [HedgesSchemaOut(**record.__dict__) for record in hedges]
+            return jsonable_encoder(hedges)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -350,8 +360,8 @@ class AlgoHedge:
             hedge_data = await self.HedgesRepository.update(hedge)
             if hedge_data is None:
                 raise DataNotFoundException(f"Hedge data not found")
-            return HedgesSchemaOut(**hedge_data.__dict__)
-
+            # return HedgesSchemaOut(**hedge_data.__dict__)
+            return jsonable_encoder(hedge_data)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -361,8 +371,8 @@ class AlgoHedge:
             hedge_data = await self.HedgesRepository.delete(hedgeid)
             if hedge_data is None:
                 raise DataNotFoundException(f"Hedge data not found {hedgeid}")
-            return HedgesSchemaOut(**hedge_data.__dict__)
-
+            # return HedgesSchemaOut(**hedge_data.__dict__)
+            return jsonable_encoder(hedge_data)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -370,8 +380,8 @@ class AlgoHedge:
     async def create(self,hedge):
         try:
             hedge_data = await self.HedgesRepository.create(hedge)
-            return HedgesSchemaOut(**hedge_data.__dict__)
-
+            # return HedgesSchemaOut(**hedge_data.__dict__)
+            return jsonable_encoder(hedge_data)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -396,7 +406,8 @@ class AlgoPLFundsRisk:
             plfundsrisks = await self.PLFundsRiskRepository.fetch_by_date(date)
             if len(plfundsrisks) == 0:
                 raise DataNotFoundException(f"PLFundsRisk data not found : {date}")
-            return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
+            # return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
+            return jsonable_encoder(plfundsrisks)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -407,7 +418,8 @@ class AlgoPLFundsRisk:
             plfundsrisks = await self.PLFundsRiskRepository.fetch_all()
             if len(plfundsrisks) == 0:
                 raise DataNotFoundException(f"PLFundsRisk data not found")
-            return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
+            # return [PLFundsRiskSchema(**record.__dict__) for record in plfundsrisks]
+            return jsonable_encoder(plfundsrisks)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -432,7 +444,8 @@ class AlgoPLDateSummary:
             pldatesummarys = await self.PLDateSummaryRepository.fetch_by_date(date)
             if len(pldatesummarys) == 0:
                 raise DataNotFoundException(f"PLDateSummary data not found : {date}")
-            return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
+            # return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
+            return jsonable_encoder(pldatesummarys)
         except Exception as e:
             await log_with_bot('e', e)
             raise e
@@ -443,7 +456,8 @@ class AlgoPLDateSummary:
                 pldatesummarys= await self.PLDateSummaryRepository.fetch_all()
                 if len(pldatesummarys) == 0:
                     raise DataNotFoundException(f"PLDateSummary data not found")
-                return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
+                # return [PLDateSummarySchema(**record.__dict__) for record in pldatesummarys]
+                return jsonable_encoder(pldatesummarys)
             except Exception as e:
                 await log_with_bot('e', e)
                 raise e
