@@ -29,29 +29,29 @@ async def get_pldatesummary_data(date: str):
 
 
 @pldatesummarysrouter.post("/createpldatesummary",response_model=ResponseSchema)
-async def create_spread_data(spread: SpreadsSchemaIn):
+async def create_spread_data(pldatesummary: PLDateSummarySchema):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
-        plDateSummary_data = await plDateSummary.create(spread)
+        plDateSummary_data = await plDateSummary.create(pldatesummary)
         return ResponseSchema(status='success', code='pldatesummary', description='ok', data=[plDateSummary_data])
     except Exception as e:
         return exception_handler(e)
 
 @pldatesummarysrouter.put("/updatepldatesummary",response_model=ResponseSchema)
-async def update_spread_data(spread: SpreadsSchemaOut):
+async def update_spread_data(pldatesummary: PLDateSummarySchema):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
-        plDateSummary_data = await plDateSummary.update(spread)
+        plDateSummary_data = await plDateSummary.update(pldatesummary)
         return ResponseSchema(status='success', code='pldatesummary', description='ok', data=[plDateSummary_data])
     except Exception as e:
         return exception_handler(e)
 
 
 @pldatesummarysrouter.delete("/deletepldatesummary",response_model=ResponseSchema)
-async def delete_spread_data(spreadid: int):
+async def delete_spread_data(broker: str,userid: str, datetime: str):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
-        plDateSummary_data = await plDateSummary.delete(spreadid)
+        plDateSummary_data = await plDateSummary.delete(broker,userid,datetime)
         return ResponseSchema(status='success', code='pldatesummary', description='ok', data=[plDateSummary_data])
     except Exception as e:
         return exception_handler(e)

@@ -31,30 +31,30 @@ async def get_plfundsrisk_data(date: str):
         return exception_handler(e)
 
 
-@plfundsrisksrouter.post("/createpldatesummary",response_model=ResponseSchema)
-async def create_spread_data(spread: SpreadsSchemaIn):
+@plfundsrisksrouter.post("/createplfundsrisk",response_model=ResponseSchema)
+async def create_spread_data(plfundsrisk: PLFundsRiskSchema):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
-        plFundsRisk_data = await plFundsRisk.create(spread)
+        plFundsRisk_data = await plFundsRisk.create(plfundsrisk)
         return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk_data])
     except Exception as e:
         return exception_handler(e)
 
-@plfundsrisksrouter.put("/updatepldatesummary",response_model=ResponseSchema)
-async def update_spread_data(spread: SpreadsSchemaOut):
+@plfundsrisksrouter.put("/updateplfundsrisk",response_model=ResponseSchema)
+async def update_spread_data(plfundsrisk: PLFundsRiskSchema):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
-        plFundsRisk_data = await plFundsRisk.update(spread)
+        plFundsRisk_data = await plFundsRisk.update(plfundsrisk)
         return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk_data])
     except Exception as e:
         return exception_handler(e)
 
 
-@plfundsrisksrouter.delete("/deletepldatesummary",response_model=ResponseSchema)
-async def delete_spread_data(spreadid: int):
+@plfundsrisksrouter.delete("/deleteplfundsrisk",response_model=ResponseSchema)
+async def delete_spread_data(broker: str,userid: str, date: str):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
-        plFundsRisk_data = await plFundsRisk.delete(spreadid)
+        plFundsRisk_data = await plFundsRisk.delete(broker,userid,date)
         return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk_data])
     except Exception as e:
         return exception_handler(e)
