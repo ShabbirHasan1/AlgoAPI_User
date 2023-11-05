@@ -32,7 +32,7 @@ async def get_plfundsrisk_data(date: str):
 
 
 @plfundsrisksrouter.post("/createplfundsrisk",response_model=ResponseSchema)
-async def create_spread_data(plfundsrisk: PLFundsRiskSchema):
+async def create_plfundsrisk_data(plfundsrisk: PLFundsRiskSchema):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
         plFundsRisk_data = await plFundsRisk.create(plfundsrisk)
@@ -41,7 +41,7 @@ async def create_spread_data(plfundsrisk: PLFundsRiskSchema):
         return exception_handler(e)
 
 @plfundsrisksrouter.put("/updateplfundsrisk",response_model=ResponseSchema)
-async def update_spread_data(plfundsrisk: PLFundsRiskSchema):
+async def update_plfundsrisk_data(plfundsrisk: PLFundsRiskSchema):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
         plFundsRisk_data = await plFundsRisk.update(plfundsrisk)
@@ -51,7 +51,7 @@ async def update_spread_data(plfundsrisk: PLFundsRiskSchema):
 
 
 @plfundsrisksrouter.delete("/deleteplfundsrisk",response_model=ResponseSchema)
-async def delete_spread_data(broker: str,userid: str, datetime: str):
+async def delete_plfundsrisk_data(broker: str,userid: str, datetime: str):
     try:
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker,settings.UserId)
         plFundsRisk_data = await plFundsRisk.delete(broker,userid,datetime)

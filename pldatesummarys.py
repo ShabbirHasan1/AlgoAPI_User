@@ -29,7 +29,7 @@ async def get_pldatesummary_data(date: str):
 
 
 @pldatesummarysrouter.post("/createpldatesummary",response_model=ResponseSchema)
-async def create_spread_data(pldatesummary: PLDateSummarySchema):
+async def create_pldatesummary_data(pldatesummary: PLDateSummarySchema):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
         plDateSummary_data = await plDateSummary.create(pldatesummary)
@@ -38,7 +38,7 @@ async def create_spread_data(pldatesummary: PLDateSummarySchema):
         return exception_handler(e)
 
 @pldatesummarysrouter.put("/updatepldatesummary",response_model=ResponseSchema)
-async def update_spread_data(pldatesummary: PLDateSummarySchema):
+async def update_pldatesummary_data(pldatesummary: PLDateSummarySchema):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
         plDateSummary_data = await plDateSummary.update(pldatesummary)
@@ -48,7 +48,7 @@ async def update_spread_data(pldatesummary: PLDateSummarySchema):
 
 
 @pldatesummarysrouter.delete("/deletepldatesummary",response_model=ResponseSchema)
-async def delete_spread_data(broker: str,userid: str, date: str):
+async def delete_pldatesummary_data(broker: str,userid: str, date: str):
     try:
         plDateSummary = await AlgoPLDateSummary(settings.Broker,settings.UserId)
         plDateSummary_data = await plDateSummary.delete(broker,userid,date)
