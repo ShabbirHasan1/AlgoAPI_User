@@ -139,7 +139,7 @@ class PLDateSummaryRepository:
         return pldatesummarydata
 
     async def update(self, pldatesummarydata: PLDateSummarySchema):
-        db_data_summary = await self.db.query(PLDateSummary).filter_by(Strategy=pldatesummarydata.Strategy,
+        db_data_summary = await self.db.query(PLDateSummaryModel).filter_by(Strategy=pldatesummarydata.Strategy,
                                                                        Broker=pldatesummarydata.Broker,
                                                                        UserId=pldatesummarydata.UserId).one()
         for field, value in pldatesummarydata.items():
@@ -155,16 +155,16 @@ class PLDateSummaryRepository:
         return pldatesummarydata
 
     async def fetch_all(self):
-        return self.db.query(PLDateSummary).all()
+        return self.db.query(PLDateSummaryModel).all()
 
     async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(PLDateSummary).filter_by(Broker=broker, UserId=user_id).first()
+        return self.db.query(PLDateSummaryModel).filter_by(Broker=broker, UserId=user_id).first()
 
     async def fetch_by_strategy(self, strategy: str):
-        return self.db.query(PLDateSummary).filter_by(Strategy=strategy).all()
+        return self.db.query(PLDateSummaryModel).filter_by(Strategy=strategy).all()
 
     async def fetch_by_date(self, date: str):
-        return self.db.query(PLDateSummary).filter_by(Date=date).all()
+        return self.db.query(PLDateSummaryModel).filter_by(Date=date).all()
 
 
 class PLFundsRiskRepository:
@@ -186,7 +186,7 @@ class PLFundsRiskRepository:
         return plfundsriskdata
 
     async def update(self, plfundsriskdata: PLFundsRiskSchema):
-        db_pl_funds_risk = await self.db.query(PLFundsRisk).filter_by(Broker=plfundsriskdata.Broker,
+        db_pl_funds_risk = await self.db.query(PLFundsRiskModel).filter_by(Broker=plfundsriskdata.Broker,
                                                                       UserId=plfundsriskdata.UserId).one()
         for field, value in plfundsriskdata.items():
             setattr(plfundsriskdata, field, value)
@@ -201,16 +201,16 @@ class PLFundsRiskRepository:
         return plfundsriskdata
 
     async def fetch_all(self):
-        return self.db.query(PLFundsRisk).all()
+        return self.db.query(PLFundsRiskModel).all()
 
     async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(PLFundsRisk).filter_by(Broker=broker, UserId=user_id).first()
+        return self.db.query(PLFundsRiskModel).filter_by(Broker=broker, UserId=user_id).first()
 
     async def fetch_by_strategy(self, strategy: str):
-        return self.db.query(PLFundsRisk).filter_by(Strategy=strategy).all()
+        return self.db.query(PLFundsRiskModel).filter_by(Strategy=strategy).all()
 
     async def fetch_by_date(self, date: str):
-        return self.db.query(PLFundsRisk).filter(func.DATE(PLFundsRisk.DateTime) == date).all()
+        return self.db.query(PLFundsRiskModel).filter(func.DATE(PLFundsRiskModel.DateTime) == date).all()
 
 async def get_SpreadsRepository():
     return await SpreadsRepository()

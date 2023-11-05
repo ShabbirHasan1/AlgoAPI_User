@@ -6,17 +6,17 @@ plfundsrisksrouter = APIRouter()
 
 @plfundsrisksrouter.get("/",response_model=ResponseSchema)
 async def get_plfundsrisks():
-    plfundsrisks = {"message": "PLFundsRisks!"}
-    return ResponseSchema(status='success', code='spread', description='ok', data=[plfundsrisks])
+    plFundsRisk = {"message": "PLFundsRisks!"}
+    return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk])
 
 
 @plfundsrisksrouter.get("/all",response_model=ResponseSchema)
 async def get_plfundsrisks_all():
     try:
-        plfundsrisk = await AlgoPLFundsRisk()
-        plfundsrisks= await plfundsrisk.get_plfundsrisks_all()
+        plFundsRisk = await AlgoPLFundsRisk()
+        plFundsRisks= await plFundsRisk.get_plfundsrisks_all()
 
-        return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=plfundsrisks)
+        return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=plFundsRisks)
     except Exception as e:
         return exception_handler(e)
 
@@ -24,8 +24,8 @@ async def get_plfundsrisks_all():
 @plfundsrisksrouter.get("/{date}",response_model=ResponseSchema)
 async def get_plfundsrisks_data(date: str):
     try:
-        plfundsrisk = await AlgoPLFundsRisk()
-        plfundsrisk_data = await plfundsrisk.get_plfundsrisks_data(date)
-        return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plfundsrisk_data])
+        plFundsRisk = await AlgoPLFundsRisk()
+        plFundsRisk_data = await plFundsRisk.get_plfundsrisks_data(date)
+        return ResponseSchema(status='success', code='plfundsrisk', description='ok', data=[plFundsRisk_data])
     except Exception as e:
         return exception_handler(e)

@@ -108,7 +108,7 @@ class HedgesModel(Base):
 
 
 
-class PLDateSummary(Base):
+class PLDateSummaryModel(Base):
     __tablename__ = 'pl_date_summary'
 
     Broker = Column(String(30), primary_key=True)
@@ -127,7 +127,7 @@ class PLDateSummary(Base):
     ActualBrokerage = Column(Float)
 
 
-class PLFundsRisk(Base):
+class PLFundsRiskModel(Base):
     __tablename__ = 'pl_funds_risk'
 
     Broker = Column(String(30), primary_key=True)
