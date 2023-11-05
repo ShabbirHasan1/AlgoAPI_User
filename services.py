@@ -429,11 +429,12 @@ class AlgoUser():
         algoSpread = AlgoSpread(self.broker,self.userid)
 
         for signal in signallist:
-            spread = await algoSpread.create_credit_spread(signal)
-
-            # activeSpreads = await self.algoSpread.get_spreads_data(signal)
-            # for spread in activeSpreads:
-            #     print(spread)
+            log_with_bot('i',f'signal : {signal}')
+            # spread = await algoSpread.create_credit_spread(signal)
+            #
+            # # activeSpreads = await self.algoSpread.get_spreads_data(signal)
+            # # for spread in activeSpreads:
+            # #     print(spread)
 
 
 

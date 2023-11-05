@@ -64,7 +64,7 @@ class SpreadsSchemaIn(BaseModel):
     SpreadType: Optional[str] = None
     SpreadStatus: Optional[str] = None
     Pnl: Optional[float] = None
-    Charges: float
+    Charges: Optional[float] = None
     PnlNet: Optional[float] = None
     Remarks: Optional[str] = None
 
@@ -129,7 +129,7 @@ class SpreadsSchemaOut(BaseModel):
     SpreadType: Optional[str] = None
     SpreadStatus: Optional[str] = None
     Pnl: Optional[float] = None
-    Charges: float
+    Charges:  Optional[float] = None
     PnlNet: Optional[float] = None
     Remarks: Optional[str] = None
 
