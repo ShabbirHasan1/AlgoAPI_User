@@ -29,8 +29,8 @@ async def process_event(events: list):
 
 async def process_trade_signal(tradesignals: list):
     try:
-        algoUser = AlgoUser(settings.Broker,Settings.UserId)
-        await algoUser.execute_signals(tradesignals)
+        # algoUser = AlgoUser(settings.Broker,settings.UserId)
+        # await algoUser.execute_signals(tradesignals)
 
         # await log_with_bot('i',f"TradeSignal {tradesignal} processed - {datetime.datetime.now()}")
         await log_with_bot('i', f"TradeSignal - {SystemDateTime()} : {tradesignals}")

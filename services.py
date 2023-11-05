@@ -144,23 +144,23 @@ class AlgoSpread:
     async def create_naked_spread(self,signal):
         algoTrade = AlgoTrade(self.broker,self.userid)
 
-        leg1CreateOrder = CreateOrderSchema(strategy=signal.get('strategy'),
-                                            exchange=signal.get('exchange'),
-                                            segment=signal.get('segment'),
-                                            symbol=signal.get('symbol'),
-                                            productType=signal.get('productType'),
-                                            orderType=signal.get('orderType'),
-                                            orderPurpose=signal.get('orderPurpose'),
-                                            transactionType=signal.get('transactionType'),
-                                            quantity=signal.get('quantity'),
-                                            orderPrice=signal.get('orderPrice'),
-                                            triggerPrice=signal.get('triggerPrice'),
-                                            validity=signal.get('validity'),
-                                            amo=signal.get('amo'),
-                                            tag=signal.get('tag')
-                                            )
+        # leg1CreateOrder = CreateOrderSchema(strategy=signal.get('strategy'),
+        #                                     exchange=signal.get('exchange'),
+        #                                     segment=signal.get('segment'),
+        #                                     symbol=signal.get('symbol'),
+        #                                     productType=signal.get('productType'),
+        #                                     orderType=signal.get('orderType'),
+        #                                     orderPurpose=signal.get('orderPurpose'),
+        #                                     transactionType=signal.get('transactionType'),
+        #                                     quantity=signal.get('quantity'),
+        #                                     orderPrice=signal.get('orderPrice'),
+        #                                     triggerPrice=signal.get('triggerPrice'),
+        #                                     validity=signal.get('validity'),
+        #                                     amo=signal.get('amo'),
+        #                                     tag=signal.get('tag')
+        #                                     )
 
-        leg1Details = await algoTrade.entry(leg1CreateOrder)
+        leg1Details = await algoTrade.entry(signal)
 
         spread_data = SpreadsSchemaIn(Broker=self.broker,
                                       UserId=self.userid,
@@ -176,32 +176,32 @@ class AlgoSpread:
                                       Trend="Buy",
                                       Spot_Price=150.0,
                                       Strike=160.0,
-                                      Leg1_Strike=leg1Details.get(''),
-                                      Leg1_Side=leg1Details.get(''),
-                                      Leg1_Symbol=leg1Details.get(''),
-                                      Leg1_Qty=leg1Details.get(''),
-                                      Leg1_BuyPrice=leg1Details.get(''),
-                                      Leg1_BuyOrderId=leg1Details.get(''),
-                                      Leg1_SellPrice=leg1Details.get(''),
-                                      Leg1_SellOrderId=leg1Details.get(''),
-                                      Leg1_Sl_Price=leg1Details.get(''),
-                                      Leg1_Sl_OrderId=leg1Details.get(''),
-                                      Leg1_Tg_Price=leg1Details.get(''),
-                                      Leg1_Tg_OrderId=leg1Details.get(''),
-                                      Leg1_Pnl=leg1Details.get(''),
-                                      Leg2_Strike=leg1Details.get(''),
-                                      Leg2_Side=leg1Details.get(''),
-                                      Leg2_Symbol=leg1Details.get(''),
-                                      Leg2_Qty=leg1Details.get(''),
-                                      Leg2_BuyPrice=leg1Details.get(''),
-                                      Leg2_BuyOrderId=leg1Details.get(''),
-                                      Leg2_SellPrice=leg1Details.get(''),
-                                      Leg2_SellOrderId=leg1Details.get(''),
-                                      Leg2_Sl_Price=leg1Details.get(''),
-                                      Leg2_Sl_OrderId=leg1Details.get(''),
-                                      Leg2_Tg_Price=leg1Details.get(''),
-                                      Leg2_Tg_OrderId=leg1Details.get(''),
-                                      Leg2_Pnl=leg1Details.get(''),
+                                      Leg1_Strike=0,
+                                      Leg1_Side='Buy',
+                                      Leg1_Symbol=signal.get('symbol'),
+                                      Leg1_Qty=signal.get('quantity'),
+                                      Leg1_BuyPrice=0,
+                                      Leg1_BuyOrderId=leg1Details['data'][0].get('nOrdNo'),
+                                      Leg1_SellPrice=0,
+                                      Leg1_SellOrderId=0,
+                                      Leg1_Sl_Price=0,
+                                      Leg1_Sl_OrderId=0,
+                                      Leg1_Tg_Price=0,
+                                      Leg1_Tg_OrderId=0,
+                                      Leg1_Pnl=0,
+                                      Leg2_Strike=0,
+                                      Leg2_Side=None,
+                                      Leg2_Symbol='xxx',
+                                      Leg2_Qty=0,
+                                      Leg2_BuyPrice=0,
+                                      Leg2_BuyOrderId=0,
+                                      Leg2_SellPrice=0,
+                                      Leg2_SellOrderId=0,
+                                      Leg2_Sl_Price=0,
+                                      Leg2_Sl_OrderId=0,
+                                      Leg2_Tg_Price=0,
+                                      Leg2_Tg_OrderId=0,
+                                      Leg2_Pnl=0,
                                       Trade_StartTime=str(datetime.datetime.now().replace(microsecond=0)),
                                       Trade_EndTime=str(datetime.datetime.now().replace(microsecond=0)),
                                       Total_Premium=250.0,
@@ -223,8 +223,69 @@ class AlgoSpread:
                                       Remarks="This is a dummy record",
                                       )
 
-        await self.create(spread_data)
+        # spread_data = SpreadsSchemaIn(Broker=self.broker,
+        #                               UserId=self.userid,
+        #                               Date=str(datetime.date.today()),
+        #                               Symbol=signal.get('symbol'),
+        #                               Status="Active",
+        #                               ExpiryDate="2023-12-31",
+        #                               ExpiryType="Weekly_Expiry",
+        #                               ProductType=signal.get('productType'),
+        #                               Exchange=signal.get('exchange'),
+        #                               Segment=signal.get('segment'),
+        #                               TradeType="Systematic",
+        #                               Trend="Buy",
+        #                               Spot_Price=150.0,
+        #                               Strike=160.0,
+        #                               Leg1_Strike=leg1Details.get(''),
+        #                               Leg1_Side=leg1Details.get(''),
+        #                               Leg1_Symbol=leg1Details.get(''),
+        #                               Leg1_Qty=leg1Details.get(''),
+        #                               Leg1_BuyPrice=leg1Details.get(''),
+        #                               Leg1_BuyOrderId=leg1Details.get(''),
+        #                               Leg1_SellPrice=leg1Details.get(''),
+        #                               Leg1_SellOrderId=leg1Details.get(''),
+        #                               Leg1_Sl_Price=leg1Details.get(''),
+        #                               Leg1_Sl_OrderId=leg1Details.get(''),
+        #                               Leg1_Tg_Price=leg1Details.get(''),
+        #                               Leg1_Tg_OrderId=leg1Details.get(''),
+        #                               Leg1_Pnl=leg1Details.get(''),
+        #                               Leg2_Strike=leg1Details.get(''),
+        #                               Leg2_Side=leg1Details.get(''),
+        #                               Leg2_Symbol=leg1Details.get(''),
+        #                               Leg2_Qty=leg1Details.get(''),
+        #                               Leg2_BuyPrice=leg1Details.get(''),
+        #                               Leg2_BuyOrderId=leg1Details.get(''),
+        #                               Leg2_SellPrice=leg1Details.get(''),
+        #                               Leg2_SellOrderId=leg1Details.get(''),
+        #                               Leg2_Sl_Price=leg1Details.get(''),
+        #                               Leg2_Sl_OrderId=leg1Details.get(''),
+        #                               Leg2_Tg_Price=leg1Details.get(''),
+        #                               Leg2_Tg_OrderId=leg1Details.get(''),
+        #                               Leg2_Pnl=leg1Details.get(''),
+        #                               Trade_StartTime=str(datetime.datetime.now().replace(microsecond=0)),
+        #                               Trade_EndTime=str(datetime.datetime.now().replace(microsecond=0)),
+        #                               Total_Premium=250.0,
+        #                               Total_Sl=17.0,
+        #                               LastPrice=155.0,
+        #                               LastPriceDate=str(datetime.datetime.now().replace(microsecond=0)),
+        #                               MarketValue=750.0,
+        #                               Strategy=signal.get('strategy'),
+        #                               Instrument=signal.get('instrument'),
+        #                               Pyramid=1,
+        #                               UnderlyingSymbol=signal.get('underlyingSymbol'),
+        #                               TradeDuration=signal.get('tradeDuration'),
+        #                               SpreadNumber=1,
+        #                               SpreadType="NakedBuy",
+        #                               SpreadStatus="Full",
+        #                               Pnl=150.0,
+        #                               Charges=5.0,
+        #                               PnlNet=145.0,
+        #                               Remarks="This is a dummy record",
+        #                               )
 
+        spread = await self.create(spread_data)
+        return spread
 
     async def create_strangle_spread(self,signal):
             pass
@@ -402,18 +463,19 @@ class AlgoTrade:
 
     async def entry(self,order):
         tradeDetails = {}
-        mainOrderDetails = self.algoBroker.create_order(order)
-        if mainOrderDetails is not None:
-            print(mainOrderDetails)
+        mainOrderDetails = await self.algoBroker.create_order(order)
+        # if mainOrderDetails is not None:
+        #     print(mainOrderDetails)
 
-        slOrderDetails = self.algoBroker.create_order(order)
-        if slOrderDetails is not None:
-            print(slOrderDetails)
+        # slOrderDetails = await self.algoBroker.create_order(order)
+        # if slOrderDetails is not None:
+        #     print(slOrderDetails)
+        #
+        # tgOrderDetails = await self.algoBroker.create_order(order)
+        # if tgOrderDetails is not None:
+        #     print(tgOrderDetails)
 
-        tgOrderDetails = self.algoBroker.create_order(order)
-        if tgOrderDetails is not None:
-            print(tgOrderDetails)
-        return tradeDetails
+        return mainOrderDetails
 
     async def exit(self,order):
         exitDetails = self.algoBroker.create_order(order)
@@ -426,10 +488,16 @@ class AlgoUser():
         self.userid = userid
 
     async def execute_signals(self,signallist):
-        algoSpread = AlgoSpread(self.broker,self.userid)
+        algoSpread = await AlgoSpread(self.broker,self.userid)
 
         for signal in signallist:
-            log_with_bot('i',f'signal : {signal}')
+            await log_with_bot('i', f'signal : {signal}')
+
+            resp = await algoSpread.create_naked_spread(signal)
+            print(resp)
+
+
+
             # spread = await algoSpread.create_credit_spread(signal)
             #
             # # activeSpreads = await self.algoSpread.get_spreads_data(signal)
