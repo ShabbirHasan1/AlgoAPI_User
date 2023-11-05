@@ -317,8 +317,10 @@ class AlgoHedge:
 
 
 class AlgoPLFundsRisk:
-    def __init__(self):
+    def __init__(self,broker,userid):
         super().__init__()
+        self.broker = broker
+        self.userid = userid
         self.PLFundsRiskRepository = None
 
     async def async_init(self):
@@ -351,8 +353,10 @@ class AlgoPLFundsRisk:
 
 
 class AlgoPLDateSummary:
-    def __init__(self):
+    def __init__(self,broker,userid):
         super().__init__()
+        self.broker = broker
+        self.userid = userid
         self.PLDateSummaryRepository = None
 
     async def async_init(self):

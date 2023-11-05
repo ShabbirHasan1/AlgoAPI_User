@@ -55,8 +55,8 @@ class SpreadsRepository:
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(SpreadsModel).filter_by(Strategy=strategy).all()
 
-    async def fetch_by_strategy_status(self, strategy: str,status: str):
-        return self.db.query(SpreadsModel).filter_by(Strategy=strategy,Status=status).all()
+    async def fetch_by_strategy_status(self, strategy: str, status: str):
+        return self.db.query(SpreadsModel).filter_by(Strategy=strategy, Status=status).all()
 
     async def fetch_by_spreadid(self, spreadid: int):
         return self.db.query(SpreadsModel).filter_by(SpreadId=spreadid).first()
@@ -90,7 +90,6 @@ class HedgesRepository:
         self.db.refresh(db_hedges)
         return db_hedges
 
-
     async def modify(self, hedgedata: HedgesSchemaOut):
         self.db.merge(hedgedata)  # This will handle both update and create operations
         self.db.commit()
@@ -107,14 +106,14 @@ class HedgesRepository:
     async def fetch_all(self):
         return self.db.query(HedgesModel).all()
 
-    async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(HedgesModel).filter_by(Broker=broker, UserId=user_id).first()
+    async def fetch_by_broker_userid(self, broker: str, userid: str):
+        return self.db.query(HedgesModel).filter_by(Broker=broker, UserId=userid).first()
 
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(HedgesModel).filter_by(Strategy=strategy).all()
 
-    async def fetch_by_strategy_status(self, strategy: str,status: str):
-        return self.db.query(HedgesModel).filter_by(Strategy=strategy,Status=status).all()
+    async def fetch_by_strategy_status(self, strategy: str, status: str):
+        return self.db.query(HedgesModel).filter_by(Strategy=strategy, Status=status).all()
 
     async def fetch_by_hedgeid(self, hedgeid: int):
         return self.db.query(HedgesModel).filter_by(HedgeId=hedgeid).first()
@@ -133,17 +132,19 @@ class PLDateSummaryRepository:
         return self.async_init().__await__()
 
     async def create(self, pldatesummarydata: PLDateSummarySchema):
-        self.db.add(pldatesummarydata)
+        pldatesummary_model = PLFundsRiskModel(**pldatesummarydata.__dict__)
+        self.db.add(pldatesummary_model)
         self.db.commit()
-        self.db.refresh(pldatesummarydata)
-        return pldatesummarydata
+        self.db.refresh(pldatesummary_model)
+        return pldatesummary_model
 
     async def update(self, pldatesummarydata: PLDateSummarySchema):
         db_data_summary = await self.db.query(PLDateSummaryModel).filter_by(Strategy=pldatesummarydata.Strategy,
-                                                                       Broker=pldatesummarydata.Broker,
-                                                                       UserId=pldatesummarydata.UserId).one()
-        for field, value in pldatesummarydata.items():
-            setattr(pldatesummarydata, field, value)
+                                                                            Broker=pldatesummarydata.Broker,
+                                                                            UserId=pldatesummarydata.UserId).one()
+        pldatesummary_dict = pldatesummarydata.__dict__
+        for field, value in pldatesummary_dict.items():
+            setattr(db_data_summary, field, value)
         self.db.commit()
         self.db.refresh(db_data_summary)
         return db_data_summary
@@ -154,11 +155,18 @@ class PLDateSummaryRepository:
         self.db.refresh(pldatesummarydata)
         return pldatesummarydata
 
+    async def delete(self, broker: str, userid: str, date: str):
+        db_pldatesummarys = self.db.query(PLDateSummaryModel).filter_by(broker=broker, UserId=userid, Date=date)
+        if db_pldatesummarys:
+            self.db.delete(db_pldatesummarys)
+            self.db.commit()
+            return db_pldatesummarys
+
     async def fetch_all(self):
         return self.db.query(PLDateSummaryModel).all()
 
-    async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(PLDateSummaryModel).filter_by(Broker=broker, UserId=user_id).first()
+    async def fetch_by_broker_userid(self, broker: str, userid: str):
+        return self.db.query(PLDateSummaryModel).filter_by(Broker=broker, UserId=userid).first()
 
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(PLDateSummaryModel).filter_by(Strategy=strategy).all()
@@ -180,16 +188,18 @@ class PLFundsRiskRepository:
         return self.async_init().__await__()
 
     async def create(self, plfundsriskdata: PLFundsRiskSchema):
-        self.db.add(plfundsriskdata)
+        plfundsrisk_model = PLFundsRiskModel(**plfundsriskdata.__dict__)
+        self.db.add(plfundsrisk_model)
         self.db.commit()
-        self.db.refresh(plfundsriskdata)
-        return plfundsriskdata
+        self.db.refresh(plfundsrisk_model)
+        return plfundsrisk_model
 
     async def update(self, plfundsriskdata: PLFundsRiskSchema):
         db_pl_funds_risk = await self.db.query(PLFundsRiskModel).filter_by(Broker=plfundsriskdata.Broker,
-                                                                      UserId=plfundsriskdata.UserId).one()
-        for field, value in plfundsriskdata.items():
-            setattr(plfundsriskdata, field, value)
+                                                                           UserId=plfundsriskdata.UserId).one()
+        plfundsrisk_dict = plfundsriskdata.__dict__
+        for field, value in plfundsrisk_dict.items():
+            setattr(db_pl_funds_risk, field, value)
         self.db.commit()
         self.db.refresh(db_pl_funds_risk)
         return db_pl_funds_risk
@@ -200,17 +210,25 @@ class PLFundsRiskRepository:
         self.db.refresh(plfundsriskdata)
         return plfundsriskdata
 
+    async def delete(self, broker: str, userid: str, datetime: str):
+        db_plfundsrisks = self.db.query(PLDateSummaryModel).filter_by(broker=broker, UserId=userid, DateTime=datetime)
+        if db_plfundsrisks:
+            self.db.delete(db_plfundsrisks)
+            self.db.commit()
+            return db_plfundsrisks
+
     async def fetch_all(self):
         return self.db.query(PLFundsRiskModel).all()
 
-    async def fetch_by_broker_userid(self, broker: str, user_id: str):
-        return self.db.query(PLFundsRiskModel).filter_by(Broker=broker, UserId=user_id).first()
+    async def fetch_by_broker_userid(self, broker: str, userid: str):
+        return self.db.query(PLFundsRiskModel).filter_by(Broker=broker, UserId=userid).first()
 
     async def fetch_by_strategy(self, strategy: str):
         return self.db.query(PLFundsRiskModel).filter_by(Strategy=strategy).all()
 
     async def fetch_by_date(self, date: str):
         return self.db.query(PLFundsRiskModel).filter(func.DATE(PLFundsRiskModel.DateTime) == date).all()
+
 
 async def get_SpreadsRepository():
     return await SpreadsRepository()
