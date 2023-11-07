@@ -41,7 +41,7 @@ class Settings(BaseSettings):
     TelegramChatId: str = os.environ.get('TelegramChatId')
     TelegramBot: Optional[str] = None
     logger: Optional[str] = None
-    UserDataBaseName: str = str(DataBaseName) + '_' + str(Broker) + '_' + str(UserId)
+    UserDataBaseName: str = str(DataBaseName) + '_' + str(Broker.lower()) + '_' + str(UserId.lower())
     KAFKA_URL: str = str(MASTER_HOST) + ':' + str(KAFKA_PORT)
     MYSQL_URL: str = str(MASTER_HOST) + ':' + str(MYSQL_PORT)
     REDIS_URL: str = str(MASTER_HOST) + ':' + str(REDIS_PORT)
