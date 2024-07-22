@@ -56,7 +56,7 @@ initialize_telegram()
 @app.on_event("startup")
 async def startup_event():
     try:
-        await log_with_bot('i', f"API User Strategy Server Started...{os.getpid()}")
+        await log_with_bot('i', f"API User Server Started...{os.getpid()}")
         await initialize_kafka()
         asyncio.create_task(consume_messages_kafka())
 
@@ -70,7 +70,7 @@ async def shutdown_event():
         await settings.kafka_producer.stop()
         await settings.kafka_consumer.stop()
 
-        await log_with_bot('i', f"API User Strategy Server Stopped...{os.getpid()}")
+        await log_with_bot('i', f"API User Server Stopped...{os.getpid()}")
 
     except Exception as e:
         await log_with_bot('e', e)
