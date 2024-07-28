@@ -5,22 +5,24 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from mangum import Mangum
 
-from taskscheduler import *
+
 from commons_kafka import *
 from spreads import *
 from hedges import *
 from plfundsrisks import *
 from pldatesummarys import *
+from tasks import *
 from webhooks import *
 from streams import *
 
 
-app = FastAPI(title="AlgoAPI_User", version="1.0")
+app = FastAPI(title=f"AlgoAPI_User_{settings.Broker}_{settings.UserId}" , version="1.0")
 router = APIRouter()
 router.include_router(spreadsrouter, prefix="/spreads", tags=["Spreads"])
 router.include_router(hedgessrouter, prefix="/hedges", tags=["Hedges"])
 router.include_router(plfundsrisksrouter, prefix="/plfundsrisks", tags=["PLFundsRisks"])
 router.include_router(pldatesummarysrouter, prefix="/pldatesummarys", tags=["PLDateSummarys"])
+router.include_router(tasksrouter, prefix="/tasks", tags=["Tasks"])
 router.include_router(webhooksrouter, prefix="/webhooks", tags=["WebHooks"])
 router.include_router(streamsrouter, prefix="/streams", tags=["Streams"])
 
