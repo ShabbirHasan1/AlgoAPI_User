@@ -26,5 +26,5 @@ async def interval_task_5mins():
 # async def cron_task():
 #     await signal_generate_SIP_INV()
 
-if master_host == '65.2.91.59':
-    TaskScheduler.add_job(interval_task_5mins, 'interval',  seconds=300, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
+# if master_host == '65.2.91.59':
+#     TaskScheduler.add_job(interval_task_5mins, 'interval',  seconds=300, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
