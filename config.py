@@ -23,6 +23,7 @@ class Settings(BaseSettings):
     API_IIFL_PORT: int = os.environ.get('API_IIFL_PORT')
     API_KOTAKNEO_PORT: int = os.environ.get('API_KOTAKNEO_PORT')
     API_FYERS_PORT: int = os.environ.get('API_FYERS_PORT')
+    API_FINVASIA_PORT: int = os.environ.get('API_FINVASIA_PORT')
     MASTER_HOST: str = os.environ.get('MASTER_HOST')
     DataBaseName: str = os.environ.get('DataBaseName')
     DataBaseUser: str = os.environ.get('DataBaseUser')
@@ -53,6 +54,7 @@ class Settings(BaseSettings):
     API_IIFL_URL: str = str(MASTER_HOST) + ':' + str(API_IIFL_PORT)
     API_FYERS_URL: str = str(MASTER_HOST) + ':' + str(API_FYERS_PORT)
     API_KOTAKNEO_URL: str = str(MASTER_HOST) + ':' + str(API_KOTAKNEO_PORT)
+    API_FINVASIA_URL: str = str(MASTER_HOST) + ':' + str(API_FINVASIA_PORT)
     kafka_producer: Optional[str] = None
     kafka_consumer: Optional[str] = None
     redis_conn: Optional[str] = None

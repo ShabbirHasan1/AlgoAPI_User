@@ -20,7 +20,32 @@ async def interval_task_5mins():
 # @TaskScheduler.scheduled_job('interval', seconds=3600, start_date=settings.MarketOpenTime,end_date=settings.MarketCloseTime)
 # async def interval_task_60mins():
 #     await log_with_bot('i',f"Task-60Mins : {datetime.datetime.now()}")
+async def upate_plfundsrisk():
 
+    algoBroker = AlgoBroker(settings.Broker, settings.UserId)
+    funds_data = await algoBroker.get_funds_data()
+    funds_data = funds_data.get('data', [{}])[0]
+
+    plFundsRisk_data = PLFundsRiskSchema(
+        Broker=settings.Broker,
+        UserId=settings.UserId,
+        DateTime=str(datetime.datetime.now().replace(microsecond=0)),
+        StartOfTheDayBalance=funds_data.get('AvailableMargin',0.0),
+        AvailableBalance=funds_data.get('AvailableMargin',0.0),
+        UtilizedBalance=2000.0,
+        UtilizationPercentage=20.0,
+        UnrealizedProfit=500.0,
+        RealizedProfit=300.0,
+        PnlAmount=800.0,
+        PnlPercentage=8.0,
+        RiskAmount=200.0,
+        RiskPercentage=2.0
+    )
+
+    plFundsRisk = await AlgoPLFundsRisk(settings.Broker, settings.UserId)
+    response = await plFundsRisk.create(plFundsRisk_data)
+
+    print(response)
 
 # @TaskScheduler.scheduled_job('cron', hour=15, minute=25)
 # async def cron_task():

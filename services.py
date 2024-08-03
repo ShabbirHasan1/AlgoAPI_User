@@ -424,6 +424,16 @@ class AlgoPLFundsRisk:
             await log_with_bot('e', e)
             raise e
 
+    async def create(self,plfundsriskdata):
+        try:
+            plfundsrisk_data = await self.PLFundsRiskRepository.create(plfundsriskdata)
+            # return SpreadsSchemaOut(**plfundsrisk_data.__dict__)
+            return jsonable_encoder(plfundsrisk_data)
+
+        except Exception as e:
+            await log_with_bot('e', e)
+            raise e
+
 
 class AlgoPLDateSummary:
     def __init__(self,broker,userid):

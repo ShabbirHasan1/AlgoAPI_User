@@ -144,6 +144,8 @@ class ApiBrokerProxy:
             self.base_url = 'http://' + settings.API_IIFL_URL
         elif broker == 'Fyers':
             self.base_url = 'http://' + settings.API_FYERS_URL
+        elif broker == 'Finvasia':
+            self.base_url = 'http://' + settings.API_FINVASIA_URL
         else:
             self.base_url = None
 
@@ -289,6 +291,13 @@ class AlgoBroker:
         path = '/orders/modifyorder'
         path = path + '/' + self.broker + '/' + self.userid
         response = await brokerProxy.post(path,json=order)
+        return response
+
+    async def get_funds_data(self):
+        brokerProxy = ApiBrokerProxy(self.broker)
+        path = '/funds'
+        path = path + '/' + self.broker + '/' + self.userid
+        response = await brokerProxy.get(path)
         return response
 
 
