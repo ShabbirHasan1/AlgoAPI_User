@@ -47,7 +47,7 @@ async def upate_plfundsrisk():
         plFundsRisk = await AlgoPLFundsRisk(settings.Broker, settings.UserId)
         response = await plFundsRisk.create(plFundsRisk_data)
 
-        await  log_with_bot('i',f'PLFundsRisks Updated ',str(settings.UserId))
+        await  log_with_bot('i',f"PLFundsRisks Updated  : {funds_data.get('AvailableMargin',0.0)}")
 
 # @TaskScheduler.scheduled_job('cron', hour=15, minute=25)
 # async def cron_task():
